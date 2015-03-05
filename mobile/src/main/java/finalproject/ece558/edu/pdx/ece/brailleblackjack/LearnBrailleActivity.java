@@ -74,6 +74,10 @@ public class LearnBrailleActivity extends FragmentActivity {
                         ? R.string.action_finish
                         : R.string.action_next);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menu.findItem(R.id.action_next).setEnabled(!(mPager.getCurrentItem() == 3));
+
+        menu.findItem(R.id.action_next).setEnabled(mPager.getCurrentItem() < 3);
         return true;
     }
 

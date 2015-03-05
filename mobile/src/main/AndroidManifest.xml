@@ -20,6 +20,14 @@
             android:name=".LearnBrailleActivity"
             android:label="Learn Braille" >
         </activity>
+        <activity
+            android:name=".PlayBlackJackActivity"
+            android:label="Play Black Jack" >
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="About Braille Black Jack" >
+        </activity>
     </application>
 
 </manifest>

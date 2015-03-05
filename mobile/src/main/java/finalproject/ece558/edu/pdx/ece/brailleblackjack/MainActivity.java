@@ -43,6 +43,8 @@ public class MainActivity extends ListActivity {
         // Instantiate the list of Selections.
         mSelections = new Selection[]{
                 new Selection(R.string.learn_braille, LearnBrailleActivity.class),
+                new Selection(R.string.play_blackjack, PlayBlackJackActivity.class),
+                new Selection(R.string.about, AboutActivity.class),
         };
 
         setListAdapter(new ArrayAdapter<Selection>(this,

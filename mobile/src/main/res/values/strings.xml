@@ -1,9 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
 
-    <string name="app_name">Braille BlackJack</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-</resources>
+        <!-- Titles -->
+        <string name="app_name">Braille BlackJack</string>
+        <string name="hello_world">Hello world!</string>
+        <string name="action_settings">Settings</string>
+        <string name="hello_blank_fragment">Hello blank fragment</string>
+
+        <string name="learn_braille">Learn Braille</string>
+        <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
+        Ipsum</string>
+
+        <!-- Actions -->
+        <string name="action_previous">Previous</string>
+        <string name="action_next">Next</string>
+        <string name="action_finish"></string>
+
+        <!-- Other strings -->
+        <string name="foo_bar"><![CDATA[Foo Bar Foo Bar Foo Bar]]></string>
+
+    </resources>
+

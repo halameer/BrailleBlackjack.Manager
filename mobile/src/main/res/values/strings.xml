@@ -19,5 +19,62 @@
         <!-- Other strings -->
         <string name="foo_bar"><![CDATA[Foo Bar Foo Bar Foo Bar]]></string>
 
+        <!-- Card descriptions for Voice-Over -->
+        <string name="description_1_clubs">You drew Ace of Clubs</string>
+        <string name="description_2_clubs">You drew 2 of Clubs</string>
+        <string name="description_3_clubs">You drew 3 of Clubs</string>
+        <string name="description_4_clubs">You drew 4 of Clubs</string>
+        <string name="description_5_clubs">You drew 5 of Clubs</string>
+        <string name="description_6_clubs">You drew 6 of Clubs</string>
+        <string name="description_7_clubs">You drew 7 of Clubs</string>
+        <string name="description_8_clubs">You drew 8 of Clubs</string>
+        <string name="description_9_clubs">You drew 9 of Clubs</string>
+        <string name="description_10_clubs">You drew 10 of Clubs</string>
+        <string name="description_11_clubs">You drew Jack of Clubs</string>
+        <string name="description_12_clubs">You drew Queen of Clubs</string>
+        <string name="description_13_clubs">You drew King of Clubs</string>
+
+        <string name="description_1_diamonds">You drew Ace of Diamonds</string>
+        <string name="description_2_diamonds">You drew 2 of Diamonds</string>
+        <string name="description_3_diamonds">You drew 3 of Diamonds</string>
+        <string name="description_4_diamonds">You drew 4 of Diamonds</string>
+        <string name="description_5_diamonds">You drew 5 of Diamonds</string>
+        <string name="description_6_diamonds">You drew 6 of Diamonds</string>
+        <string name="description_7_diamonds">You drew 7 of Diamonds</string>
+        <string name="description_8_diamonds">You drew 8 of Diamonds</string>
+        <string name="description_9_diamonds">You drew 9 of Diamonds</string>
+        <string name="description_10_diamonds">You drew 10 of Diamonds</string>
+        <string name="description_11_diamonds">You drew Jack of Diamonds</string>
+        <string name="description_12_diamonds">You drew Queen of Diamonds</string>
+        <string name="description_13_diamonds">You drew King of Diamonds</string>
+
+        <string name="description_1_hearts">You drew Ace of Hearts</string>
+        <string name="description_2_hearts">You drew 2 of Hearts</string>
+        <string name="description_3_hearts">You drew 3 of Hearts</string>
+        <string name="description_4_hearts">You drew 4 of Hearts</string>
+        <string name="description_5_hearts">You drew 5 of Hearts</string>
+        <string name="description_6_hearts">You drew 6 of Hearts</string>
+        <string name="description_7_hearts">You drew 7 of Hearts</string>
+        <string name="description_8_hearts">You drew 8 of Hearts</string>
+        <string name="description_9_hearts">You drew 9 of Hearts</string>
+        <string name="description_10_hearts">You drew 10 of Hearts</string>
+        <string name="description_11_hearts">You drew Jack of Hearts</string>
+        <string name="description_12_hearts">You drew Queen of Hearts</string>
+        <string name="description_13_hearts">You drew King of Hearts</string>
+
+        <string name="description_1_spades">You drew Ace of Spades</string>
+        <string name="description_2_spades">You drew 2 of Spades</string>
+        <string name="description_3_spades">You drew 3 of Spades</string>
+        <string name="description_4_spades">You drew 4 of Spades</string>
+        <string name="description_5_spades">You drew 5 of Spades</string>
+        <string name="description_6_spades">You drew 6 of Spades</string>
+        <string name="description_7_spades">You drew 7 of Spades</string>
+        <string name="description_8_spades">You drew 8 of Spades</string>
+        <string name="description_9_spades">You drew 9 of Spades</string>
+        <string name="description_10_spades">You drew 10 of Spades</string>
+        <string name="description_11_spades">You drew Jack of Spades</string>
+        <string name="description_12_spades">You drew Queen of Spades</string>
+        <string name="description_13_spades">You drew King of Spades</string>
+
     </resources>
 

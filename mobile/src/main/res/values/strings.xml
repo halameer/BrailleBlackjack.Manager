@@ -8,16 +8,17 @@
         <string name="hello_blank_fragment">Hello blank fragment</string>
 
         <string name="learn_braille">Learn Braille</string>
-        <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
-        Ipsum</string>
 
         <!-- Actions -->
         <string name="action_previous">Previous</string>
         <string name="action_next">Next</string>
         <string name="action_finish"></string>
 
-        <!-- Other strings -->
-        <string name="foo_bar"><![CDATA[Foo Bar Foo Bar Foo Bar]]></string>
+        <!-- Learning Braille Description -->
+        <string name="description_numbers">Explaining numbers in Braille</string>
+        <string name="description_capitalization">Explaining capitalization in Braille</string>
+        <string name="description_letters_atom">Displaying letters a through m in Braille</string>
+        <string name="description_letters_ntoz">Displaying letters n through z in Braille</string>
 
         <!-- Card descriptions for Voice-Over -->
         <string name="description_1_clubs">You drew Ace of Clubs</string>

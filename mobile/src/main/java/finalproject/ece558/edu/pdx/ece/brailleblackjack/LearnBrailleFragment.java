@@ -57,15 +57,19 @@ public class LearnBrailleFragment extends android.support.v4.app.Fragment {
             case 1:
 
                 img.setImageDrawable(getResources().getDrawable(R.drawable.numbers));
+                img.setContentDescription(getResources().getString(R.string.description_numbers));
                 break;
             case 2:
                 img.setImageDrawable(getResources().getDrawable(R.drawable.capital_letters));
+                img.setContentDescription(getResources().getString(R.string.description_capitalization));
                 break;
             case 3:
                 img.setImageDrawable(getResources().getDrawable(R.drawable.letters_atom));
+                img.setContentDescription(getResources().getString(R.string.description_letters_atom));
                 break;
             case 4:
                 img.setImageDrawable(getResources().getDrawable(R.drawable.letters_ntoz));
+                img.setContentDescription(getResources().getString(R.string.description_letters_ntoz));
                 break;
             default:
                 break;

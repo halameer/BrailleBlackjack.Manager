@@ -22,7 +22,12 @@
         <string name="description_letters_atom">Displaying letters a through m in Braille</string>
         <string name="description_letters_ntoz">Displaying letters n through z in Braille</string>
 
-        <!-- Card descriptions for Voice-Over -->
+        <!-- Playing Black Jack -->
+        <string name="hit">Hit</string>
+        <string name="stand">Stand</string>
+        <string name="reveal_total">Reveal Total</string>
+
+        <!-- Card descriptions for Talk-Back -->
         <string name="description_1_clubs">You drew Ace of Clubs</string>
         <string name="description_2_clubs">You drew 2 of Clubs</string>
         <string name="description_3_clubs">You drew 3 of Clubs</string>

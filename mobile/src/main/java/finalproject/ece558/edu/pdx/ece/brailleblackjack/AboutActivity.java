@@ -36,8 +36,6 @@ public class AboutActivity extends Activity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        menu.findItem(R.id.action_previous).setVisible(false);
-
         return true;
     }
 

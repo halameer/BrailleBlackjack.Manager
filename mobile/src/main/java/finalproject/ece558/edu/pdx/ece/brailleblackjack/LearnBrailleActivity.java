@@ -65,15 +65,21 @@ public class LearnBrailleActivity extends FragmentActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        // Add either a "next" or "finish" button to the action bar, depending on which page
+        // is currently selected.
+        MenuItem prev_item = menu.add(Menu.NONE, R.id.action_previous, Menu.NONE, R.string.action_previous);
+
+        prev_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
         menu.findItem(R.id.action_previous).setEnabled(mPager.getCurrentItem() > 0);
 
         // Add either a "next" or "finish" button to the action bar, depending on which page
         // is currently selected.
-        MenuItem item = menu.add(Menu.NONE, R.id.action_next, Menu.NONE,
+        MenuItem next_item = menu.add(Menu.NONE, R.id.action_next, Menu.NONE,
                 (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1)
                         ? R.string.action_finish
                         : R.string.action_next);
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        next_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menu.findItem(R.id.action_next).setEnabled(!(mPager.getCurrentItem() == 3));
 

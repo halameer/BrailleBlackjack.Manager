@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.Random;
+
 public class PlayBlackJackGameFragment extends Fragment {
 
     private ImageView dealer_left_card;
@@ -97,5 +99,43 @@ public class PlayBlackJackGameFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    public String generateRandomCard(){
+        String RandomCard = null;
+        int max;
+        int min;
+
+        Random r = new Random();
+        // Generate pseudo-random number between 1-13 for cards between 2-10
+        //  and Ace  = 1, Jack = 11, Queen = 12, King = 13
+        max = 13;
+        min = 1;
+        int card = r.nextInt((max - min) + 1) + min;
+
+        // Generate pseudo-random number between 1-4 for Suit Type
+        // Clubs = 1, Diamonds = 2, Hearts = 3, Spades = 4
+        max = 4;
+        min = 1;
+        int suit = r.nextInt((max - min) + 1) + min;
+
+        switch (suit){
+            case 1:
+                RandomCard = String.valueOf(card) + "_of_clubs";
+                break;
+            case 2:
+                RandomCard = String.valueOf(card) + "_of_diamonds";
+                break;
+            case 3:
+                RandomCard = String.valueOf(card) + "_of_hearts";
+                break;
+            case 4:
+                RandomCard = String.valueOf(card) + "_of_spades";
+                break;
+            default:
+                break;
+        }
+
+        return RandomCard;
     }
 }

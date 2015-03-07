@@ -37,7 +37,7 @@ public class DeckDatabase extends SQLiteOpenHelper {
             + UNIQUE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CARD_KEY + " TEXT,"
             + CARD_DESCRIPTION + " TEXT,"
-            + CARD_DRAWABLE + " TEXT,"
+            + CARD_DRAWABLE + " INTEGER,"
             + CARD_VALUE + " INTEGER"
             + ")";
 

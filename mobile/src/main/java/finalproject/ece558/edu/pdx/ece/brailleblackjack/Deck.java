@@ -21,13 +21,13 @@ public class Deck {
      * This method adds a card to the database
      * Each row must have a card key (what the card is)
      *  the card's description for Android Voice-Over
-     *  the card's drawable image string
+     *  the card's drawable image integer
      *  and the card's value as an integer (1-10)
      *  NOTE: Ace will be identified as 1 but it has a possible value of 11
      */
     public long insertCard(String key,
                            String description,
-                           String drawable,
+                           int drawable,
                            int value){
         SQLiteDatabase db = storage.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -85,12 +85,12 @@ public class Deck {
         Card card = new Card(
                 cursor.getString(index1),
                 cursor.getString(index2),
-                cursor.getString(index3),
+                cursor.getInt(index3),
                 cursor.getInt(index4));
         return card;
     }
 
-    public  void addCardsToDB(Context context){
+    /*public  void addCardsToDB(Context context){
         // Adding club suit
         insertCard("1_of_clubs", context.getString(R.string.description_1_clubs), null, 1);
         insertCard("2_of_clubs", context.getString(R.string.description_2_clubs), null, 2);
@@ -148,5 +148,5 @@ public class Deck {
         insertCard("12_of_spades", context.getString(R.string.description_12_spades), null, 10);
         insertCard("13_of_spades", context.getString(R.string.description_13_spades), null, 10);
 
-    }
+    }*/
 }

@@ -6,13 +6,13 @@ package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 public class Card {
     private String cardKey;
     private String cardDescription;
-    private String cardDrawable;
+    private int cardDrawable;
     private int cardValue;
 
     /**
      * Fully Qualified Constructor
      */
-    public Card(String cardKey, String cardDescription, String cardDrawable, int cardValue){
+    public Card(String cardKey, String cardDescription, int cardDrawable, int cardValue){
         this.cardKey = cardKey;
         this.cardDescription = cardDescription;
         this.cardDrawable = cardDrawable;
@@ -39,7 +39,7 @@ public class Card {
      * Get the current card's drawable
      * @return String of card drawable
      */
-    public String getCardDrawable() {
+    public int getCardDrawable() {
         return cardDrawable;
     }
 
@@ -71,7 +71,7 @@ public class Card {
      * Set a card drawable string
      * @param cardDrawable
      */
-    public void setCardDrawable(String cardDrawable) {
+    public void setCardDrawable(int cardDrawable) {
         this.cardDrawable = cardDrawable;
     }
 

@@ -1,6 +1,7 @@
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.app.Activity;
+import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,6 +47,15 @@ public class PlayBlackJackGameFragment extends Fragment {
     private Button button_hit;
     private Button button_stand;
 
+    private Context context = null;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        context = this.getActivity();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +67,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         if (savedInstanceState != null) {
 
             // Grab the single dealer card on the right and the two player cards
-            curDeck = new Deck(this);
+            curDeck = new Deck(context);
             dealer_left_card = curDeck.getCard(generateRandomCard());
             dealer_right_card = curDeck.getCard(generateRandomCard());
             player_left_card = curDeck.getCard(generateRandomCard());
@@ -107,7 +117,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         return v;
     }
 
-
+    /*
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -121,7 +131,7 @@ public class PlayBlackJackGameFragment extends Fragment {
                 Log.i("Play Black Jack Game Fragment", "onClick Error: " + view.getId());
                 break;
         }
-    }
+    } */
 
     public void playerHits() {
         int temp_player_top_total_value;

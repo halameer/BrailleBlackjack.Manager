@@ -134,9 +134,6 @@ public class PlayBlackJackGameFragment extends Fragment {
     } */
 
     public void playerHits() {
-        int temp_player_top_total_value;
-        int temp_player_bot_total_value;
-
         // Grab a new card.
         player_left_card = player_right_card;
         player_right_card = curDeck.getCard(generateRandomCard());
@@ -168,8 +165,18 @@ public class PlayBlackJackGameFragment extends Fragment {
     }
 
     public void dealerHits() {
-        int temp_dealer_top_total_value;
-        int temp_dealer_bot_total_value;
+        int final_player_total;
+        int final_dealer_total;
+
+        // Grab the player's highest total
+        final_player_total = (player_top_total_value > player_bot_total_value)
+                        ? player_top_total_value
+                        : player_bot_total_value;
+
+        // Grab the dealer's highest total
+        final_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
+                ? dealer_top_total_value
+                : dealer_bot_total_value;
 
         // Grab a new card.
         dealer_left_card = dealer_right_card;
@@ -179,7 +186,7 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
             dealer_bot_total_value = dealer_bot_total_value + dealer_right_card.getCardValue();
 
-            // The Ace being 11 will cause the player to bust.
+            // The Ace being 11 will cause the dealer to bust.
             if (dealer_bot_total_value > 21){
                 dealer_bot_total_value = 0;
 
@@ -194,8 +201,24 @@ public class PlayBlackJackGameFragment extends Fragment {
                 // Player wins.
                 // Pop up a notification.
             }
-        }
+            else if (dealer_top_total_value <= 17) {
+                if (final_player_total < final_dealer_total){
+                    dealerHits();
+                } else if (final_player_total < final_dealer_total) {
+                    // Player loses
+                } else if (final_player_total > final_dealer_total) {
+                    // Player wins
+                }
 
+            }
+            else if (dealer_top_total_value > 17) {
+                if (final_player_total < final_dealer_total){
+                    // Player Loses
+                } else {
+                    // Player wins
+                }
+            }
+        }
     }
 
 

@@ -2,19 +2,21 @@ package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.Random;
 
 public class MainActivity extends ListActivity {
+    public static final String PREFS_NAME = "MyPrefsFile";
+    // Logcat tag
+    private static final String LOG = "MainActivity";
     /**
      * This class describes an individual Selection (the Selection title, and the activity class that
      * demonstrates this Selection).
@@ -46,12 +48,30 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
 
-        /* TESTING DATABASE ADD, REMOVE LATER */
-        Deck deck = new Deck(this);
-        deck.insertCard("1_of_clubs", this.getString(R.string.description_1_clubs), R.drawable.clubs_ace, 1);
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        boolean doesDatabaseExist = settings.getBoolean("DatabaseExists", false);
 
-        Card card = deck.getCard("1_of_clubs");
-        testDialog(card);
+        // Database does not exist, must be a newly installed application
+        //  or application data got wiped, create deck database
+        if(!doesDatabaseExist){
+            Log.d(LOG, "There is no Database, go create one");
+
+            // Create a new deck database
+            Deck deck = new Deck(this);
+            deck.addCardsToDB(this);
+            Log.d(LOG, "All cards added to database");
+            // We need an Editor object to make preference changes.
+            // All objects are from android.context.Context
+            SharedPreferences.Editor editor = settings.edit();
+            // Database created
+            doesDatabaseExist = true;
+            editor.putBoolean("DatabaseExists", doesDatabaseExist);
+            // Commit the edits!
+            editor.commit();
+        }else{
+            Log.d(LOG, "Database exists! No need to create a new one");
+        }
 
         // Instantiate the list of Selections.
         mSelections = new Selection[]{
@@ -70,28 +90,6 @@ public class MainActivity extends ListActivity {
     protected void onListItemClick(ListView listView, View view, int position, long id) {
         // Launch the Selection associated with this list position.
         startActivity(new Intent(MainActivity.this, mSelections[position].activityClass));
-    }
-
-    /**
-     * Display of an AlertDialog to show the current question's answer
-     */
-    private void testDialog(Card card){
-        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-        alertbox.setTitle("CARD");
-        alertbox.setCancelable(false);
-
-        alertbox.setIcon(card.getCardDrawable());
-
-        alertbox.setMessage("Card Key: " + card.getCardKey()+"\n"
-                          + "Card Description: " + card.getCardDescription()+"\n"
-                          + "Card Value: " + card.getCardValue());
-
-        alertbox.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        alertbox.show();
     }
 }
 

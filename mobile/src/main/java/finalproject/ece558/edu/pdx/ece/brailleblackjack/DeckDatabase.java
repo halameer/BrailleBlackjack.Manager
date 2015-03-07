@@ -53,7 +53,7 @@ public class DeckDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        Log.d(LOG, "onCreate called");
+        Log.d(LOG, "The Database onCreate called");
         // Create the table
         db.execSQL(CREATE_TABLE_CARD);
     }
@@ -61,7 +61,7 @@ public class DeckDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try {
-            Log.d(LOG, "onUpgrade called");
+            Log.d(LOG, "The Database onUpgrade called");
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
         } catch (SQLException e) {

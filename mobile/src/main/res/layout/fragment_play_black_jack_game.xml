@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Hit"
         android:id="@+id/button_hit"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/img_view_player_top_total" />
 
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="Stand"
         android:id="@+id/button_stand"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignTop="@+id/button_hit"
         android:layout_toEndOf="@+id/img_view_dealer_bot_total" />
 
@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_left_card"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_right_card"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
 
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_left_card"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_right_card"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
 
@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_top_total"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/img_view_dealer_bot_total" />
 
@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_bot_total"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_above="@+id/button_stand"
         android:layout_centerHorizontal="true" />
 
@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_top_total"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_below="@+id/button_stand"
         android:layout_toStartOf="@+id/button_stand" />
 
@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_bot_total"
-        android:src="@drawable/diamonds_ace"
+        android:src="@drawable/placeholder"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

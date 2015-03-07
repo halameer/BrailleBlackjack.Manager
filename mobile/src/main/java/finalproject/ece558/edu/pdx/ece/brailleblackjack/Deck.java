@@ -90,63 +90,63 @@ public class Deck {
         return card;
     }
 
-    /*public  void addCardsToDB(Context context){
+    public  void addCardsToDB(Context context){
         // Adding club suit
-        insertCard("1_of_clubs", context.getString(R.string.description_1_clubs), null, 1);
-        insertCard("2_of_clubs", context.getString(R.string.description_2_clubs), null, 2);
-        insertCard("3_of_clubs", context.getString(R.string.description_3_clubs), null, 3);
-        insertCard("4_of_clubs", context.getString(R.string.description_4_clubs), null, 4);
-        insertCard("5_of_clubs", context.getString(R.string.description_5_clubs), null, 5);
-        insertCard("6_of_clubs", context.getString(R.string.description_6_clubs), null, 6);
-        insertCard("7_of_clubs", context.getString(R.string.description_7_clubs), null, 7);
-        insertCard("8_of_clubs", context.getString(R.string.description_8_clubs), null, 8);
-        insertCard("9_of_clubs", context.getString(R.string.description_9_clubs), null, 9);
-        insertCard("10_of_clubs", context.getString(R.string.description_10_clubs), null, 10);
-        insertCard("11_of_clubs", context.getString(R.string.description_11_clubs), null, 10);
-        insertCard("12_of_clubs", context.getString(R.string.description_12_clubs), null, 10);
-        insertCard("13_of_clubs", context.getString(R.string.description_13_clubs), null, 10);
+        insertCard("1_of_clubs", context.getString(R.string.description_1_clubs), R.drawable.clubs_ace, 1);
+        insertCard("2_of_clubs", context.getString(R.string.description_2_clubs), R.drawable.clubs_2, 2);
+        insertCard("3_of_clubs", context.getString(R.string.description_3_clubs), R.drawable.clubs_3, 3);
+        insertCard("4_of_clubs", context.getString(R.string.description_4_clubs), R.drawable.clubs_4, 4);
+        insertCard("5_of_clubs", context.getString(R.string.description_5_clubs), R.drawable.clubs_5, 5);
+        insertCard("6_of_clubs", context.getString(R.string.description_6_clubs), R.drawable.clubs_6, 6);
+        insertCard("7_of_clubs", context.getString(R.string.description_7_clubs), R.drawable.clubs_7, 7);
+        insertCard("8_of_clubs", context.getString(R.string.description_8_clubs), R.drawable.clubs_8, 8);
+        insertCard("9_of_clubs", context.getString(R.string.description_9_clubs), R.drawable.clubs_9, 9);
+        insertCard("10_of_clubs", context.getString(R.string.description_10_clubs), R.drawable.clubs_10, 10);
+        insertCard("11_of_clubs", context.getString(R.string.description_11_clubs), R.drawable.clubs_jack, 10);
+        insertCard("12_of_clubs", context.getString(R.string.description_12_clubs), R.drawable.clubs_queen, 10);
+        insertCard("13_of_clubs", context.getString(R.string.description_13_clubs), R.drawable.clubs_king, 10);
         // Adding diamonds suit
-        insertCard("1_of_diamonds", context.getString(R.string.description_1_diamonds), null, 1);
-        insertCard("2_of_diamonds", context.getString(R.string.description_2_diamonds), null, 2);
-        insertCard("3_of_diamonds", context.getString(R.string.description_3_diamonds), null, 3);
-        insertCard("4_of_diamonds", context.getString(R.string.description_4_diamonds), null, 4);
-        insertCard("5_of_diamonds", context.getString(R.string.description_5_diamonds), null, 5);
-        insertCard("6_of_diamonds", context.getString(R.string.description_6_diamonds), null, 6);
-        insertCard("7_of_diamonds", context.getString(R.string.description_7_diamonds), null, 7);
-        insertCard("8_of_diamonds", context.getString(R.string.description_8_diamonds), null, 8);
-        insertCard("9_of_diamonds", context.getString(R.string.description_9_diamonds), null, 9);
-        insertCard("10_of_diamonds", context.getString(R.string.description_10_diamonds), null, 10);
-        insertCard("11_of_diamonds", context.getString(R.string.description_11_diamonds), null, 10);
-        insertCard("12_of_diamonds", context.getString(R.string.description_12_diamonds), null, 10);
-        insertCard("13_of_diamonds", context.getString(R.string.description_13_diamonds), null, 10);
+        insertCard("1_of_diamonds", context.getString(R.string.description_1_diamonds), R.drawable.diamonds_ace, 1);
+        insertCard("2_of_diamonds", context.getString(R.string.description_2_diamonds), R.drawable.diamonds_2, 2);
+        insertCard("3_of_diamonds", context.getString(R.string.description_3_diamonds), R.drawable.diamonds_3, 3);
+        insertCard("4_of_diamonds", context.getString(R.string.description_4_diamonds), R.drawable.diamonds_4, 4);
+        insertCard("5_of_diamonds", context.getString(R.string.description_5_diamonds), R.drawable.diamonds_5, 5);
+        insertCard("6_of_diamonds", context.getString(R.string.description_6_diamonds), R.drawable.diamonds_6, 6);
+        insertCard("7_of_diamonds", context.getString(R.string.description_7_diamonds), R.drawable.diamonds_7, 7);
+        insertCard("8_of_diamonds", context.getString(R.string.description_8_diamonds), R.drawable.diamonds_8, 8);
+        insertCard("9_of_diamonds", context.getString(R.string.description_9_diamonds), R.drawable.diamonds_9, 9);
+        insertCard("10_of_diamonds", context.getString(R.string.description_10_diamonds), R.drawable.diamonds_10, 10);
+        insertCard("11_of_diamonds", context.getString(R.string.description_11_diamonds), R.drawable.diamonds_jack, 10);
+        insertCard("12_of_diamonds", context.getString(R.string.description_12_diamonds), R.drawable.diamonds_queen, 10);
+        insertCard("13_of_diamonds", context.getString(R.string.description_13_diamonds), R.drawable.diamonds_king, 10);
         // Adding hearts suit
-        insertCard("1_of_hearts", context.getString(R.string.description_1_hearts), null, 1);
-        insertCard("2_of_hearts", context.getString(R.string.description_2_hearts), null, 2);
-        insertCard("3_of_hearts", context.getString(R.string.description_3_hearts), null, 3);
-        insertCard("4_of_hearts", context.getString(R.string.description_4_hearts), null, 4);
-        insertCard("5_of_hearts", context.getString(R.string.description_5_hearts), null, 5);
-        insertCard("6_of_hearts", context.getString(R.string.description_6_hearts), null, 6);
-        insertCard("7_of_hearts", context.getString(R.string.description_7_hearts), null, 7);
-        insertCard("8_of_hearts", context.getString(R.string.description_8_hearts), null, 8);
-        insertCard("9_of_hearts", context.getString(R.string.description_9_hearts), null, 9);
-        insertCard("10_of_hearts", context.getString(R.string.description_10_hearts), null, 10);
-        insertCard("11_of_hearts", context.getString(R.string.description_11_hearts), null, 10);
-        insertCard("12_of_hearts", context.getString(R.string.description_12_hearts), null, 10);
-        insertCard("13_of_hearts", context.getString(R.string.description_13_hearts), null, 10);
+        insertCard("1_of_hearts", context.getString(R.string.description_1_hearts), R.drawable.heart_ace, 1);
+        insertCard("2_of_hearts", context.getString(R.string.description_2_hearts), R.drawable.heart_2, 2);
+        insertCard("3_of_hearts", context.getString(R.string.description_3_hearts), R.drawable.heart_3, 3);
+        insertCard("4_of_hearts", context.getString(R.string.description_4_hearts), R.drawable.heart_4, 4);
+        insertCard("5_of_hearts", context.getString(R.string.description_5_hearts), R.drawable.heart_5, 5);
+        insertCard("6_of_hearts", context.getString(R.string.description_6_hearts), R.drawable.heart_6, 6);
+        insertCard("7_of_hearts", context.getString(R.string.description_7_hearts), R.drawable.heart_7, 7);
+        insertCard("8_of_hearts", context.getString(R.string.description_8_hearts), R.drawable.heart_8, 8);
+        insertCard("9_of_hearts", context.getString(R.string.description_9_hearts), R.drawable.heart_9, 9);
+        insertCard("10_of_hearts", context.getString(R.string.description_10_hearts), R.drawable.heart_10, 10);
+        insertCard("11_of_hearts", context.getString(R.string.description_11_hearts), R.drawable.heart_jack, 10);
+        insertCard("12_of_hearts", context.getString(R.string.description_12_hearts), R.drawable.heart_queen, 10);
+        insertCard("13_of_hearts", context.getString(R.string.description_13_hearts), R.drawable.heart_king, 10);
         // Adding spades suit
-        insertCard("1_of_spades", context.getString(R.string.description_1_spades), null, 1);
-        insertCard("2_of_spades", context.getString(R.string.description_2_spades), null, 2);
-        insertCard("3_of_spades", context.getString(R.string.description_3_spades), null, 3);
-        insertCard("4_of_spades", context.getString(R.string.description_4_spades), null, 4);
-        insertCard("5_of_spades", context.getString(R.string.description_5_spades), null, 5);
-        insertCard("6_of_spades", context.getString(R.string.description_6_spades), null, 6);
-        insertCard("7_of_spades", context.getString(R.string.description_7_spades), null, 7);
-        insertCard("8_of_spades", context.getString(R.string.description_8_spades), null, 8);
-        insertCard("9_of_spades", context.getString(R.string.description_9_spades), null, 9);
-        insertCard("10_of_spades", context.getString(R.string.description_10_spades), null, 10);
-        insertCard("11_of_spades", context.getString(R.string.description_11_spades), null, 10);
-        insertCard("12_of_spades", context.getString(R.string.description_12_spades), null, 10);
-        insertCard("13_of_spades", context.getString(R.string.description_13_spades), null, 10);
+        insertCard("1_of_spades", context.getString(R.string.description_1_spades), R.drawable.spades_ace, 1);
+        insertCard("2_of_spades", context.getString(R.string.description_2_spades), R.drawable.spades_2, 2);
+        insertCard("3_of_spades", context.getString(R.string.description_3_spades), R.drawable.spades_3, 3);
+        insertCard("4_of_spades", context.getString(R.string.description_4_spades), R.drawable.spades_4, 4);
+        insertCard("5_of_spades", context.getString(R.string.description_5_spades), R.drawable.spades_5, 5);
+        insertCard("6_of_spades", context.getString(R.string.description_6_spades), R.drawable.spades_6, 6);
+        insertCard("7_of_spades", context.getString(R.string.description_7_spades), R.drawable.spades_7, 7);
+        insertCard("8_of_spades", context.getString(R.string.description_8_spades), R.drawable.spades_8, 8);
+        insertCard("9_of_spades", context.getString(R.string.description_9_spades), R.drawable.spades_9, 9);
+        insertCard("10_of_spades", context.getString(R.string.description_10_spades), R.drawable.spades_10, 10);
+        insertCard("11_of_spades", context.getString(R.string.description_11_spades), R.drawable.spades_jack, 10);
+        insertCard("12_of_spades", context.getString(R.string.description_12_spades), R.drawable.spades_queen, 10);
+        insertCard("13_of_spades", context.getString(R.string.description_13_spades), R.drawable.spades_king, 10);
 
-    }*/
+    }
 }

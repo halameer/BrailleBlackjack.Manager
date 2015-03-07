@@ -1,10 +1,91 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="finalproject.ece558.edu.pdx.ece.brailleblackjack.PlayBlackJackGameFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Hit"
+        android:id="@+id/button_hit"
+        android:src="@drawable/diamonds_ace"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/img_view_player_top_total" />
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Stand"
+        android:id="@+id/button_stand"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignTop="@+id/button_hit"
+        android:layout_toEndOf="@+id/img_view_dealer_bot_total" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_left_card"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_right_card"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_left_card"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_right_card"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_top_total"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/img_view_dealer_bot_total" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_bot_total"
+        android:src="@drawable/diamonds_ace"
+        android:layout_above="@+id/button_stand"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_top_total"
+        android:src="@drawable/diamonds_ace"
+        android:layout_below="@+id/button_stand"
+        android:layout_toStartOf="@+id/button_stand" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_bot_total"
+        android:src="@drawable/diamonds_ace"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

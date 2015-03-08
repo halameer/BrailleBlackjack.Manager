@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:orientation="vertical"
-    tools:context=".MainActivity" tools:deviceIds="wear_square">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" tools:deviceIds="wear_square"
+    android:background="@drawable/watch_square"
+    android:baselineAligned="true"
+    android:orientation="vertical">
 
-    <TextView android:id="@+id/text" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:text="@string/hello_square" />
-</LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hit"
+        android:id="@+id/hit_button"
+        android:layout_above="@+id/stand_button"
+        android:layout_marginBottom="15dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stand"
+        android:id="@+id/stand_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

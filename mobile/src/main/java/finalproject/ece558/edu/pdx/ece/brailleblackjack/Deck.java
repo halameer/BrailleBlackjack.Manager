@@ -37,6 +37,7 @@ public class Deck {
         contentValues.put(DeckDatabase.getCardValue(), value);
 
         long id = db.insert(DeckDatabase.getTableName(), null, contentValues);
+        db.close();
         return id;
     }
 
@@ -87,6 +88,8 @@ public class Deck {
                 cursor.getString(index2),
                 cursor.getInt(index3),
                 cursor.getInt(index4));
+        cursor.close();
+        db.close();
         return card;
     }
 

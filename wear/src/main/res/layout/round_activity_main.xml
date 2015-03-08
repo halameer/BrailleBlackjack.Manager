@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".MainActivity" tools:deviceIds="wear_round">
+    android:layout_height="match_parent" tools:context=".MainActivity" tools:deviceIds="wear_round"
+    android:background="@drawable/watch_round">
 
-    <TextView android:id="@+id/text" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" android:text="@string/hello_round" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hit"
+        android:id="@+id/hit_button"
+        android:layout_above="@+id/stand_button"
+        android:layout_marginBottom="15dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stand"
+        android:id="@+id/stand_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

@@ -11,9 +11,18 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -28,12 +37,22 @@ import java.util.Random;
  * @see LearnBrailleFragment
  */
 public class AboutActivity extends Activity {
+    private static final String TAG = "WearActivity";
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
+        Log.d(TAG, "Attempting to connect to Google Api Client");
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .build();
+        mGoogleApiClient.connect();
+        Log.d(TAG, "Connected to Google Api Client");
+
+        sendMessage("/MESSAGE");
 
         /* Testing Database */
         // Create a new deck database
@@ -121,5 +140,33 @@ public class AboutActivity extends Activity {
             }
         });
         alertbox.show();
+    }
+
+    public void sendMessage(String message){
+        final String msg = message;
+        if (mGoogleApiClient == null) {
+            Log.d(TAG, "Don't send anything, no wear exists");
+            return;
+        }
+        Log.d(TAG, "Final statement");
+        final PendingResult<NodeApi.GetConnectedNodesResult> nodes
+                = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+        nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+            @Override
+            public void onResult(NodeApi.GetConnectedNodesResult result) {
+                Log.d(TAG, "Inside onResult");
+                final List<Node> nodes = result.getNodes();
+                if (nodes != null) {
+                    Log.d(TAG, "Going to send message");
+                    for (int i = 0; i < nodes.size(); i++) {
+                        Log.d(TAG, "Sending part: " + i);
+                        final Node node = nodes.get(i);
+
+                        // You can just send a message
+                        Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), msg, null);
+                    }
+                }
+            }
+        });
     }
 }

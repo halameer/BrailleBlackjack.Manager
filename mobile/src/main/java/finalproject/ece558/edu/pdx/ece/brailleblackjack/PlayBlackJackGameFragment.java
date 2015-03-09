@@ -471,4 +471,69 @@ public class PlayBlackJackGameFragment extends Fragment {
 
         return RandomCard;
     }
+
+    public int giveTotalDrawable(int total){
+        switch (total){
+            case 1:
+                return R.drawable.total_1;
+            case 2:
+                return R.drawable.total_2;
+            case 3:
+                return R.drawable.total_3;
+            case 4:
+                return R.drawable.total_4;
+            case 5:
+                return R.drawable.total_5;
+            case 7:
+                return R.drawable.total_7;
+            case 8:
+                return R.drawable.total_8;
+            case 9:
+                return R.drawable.total_9;
+            case 10:
+                return R.drawable.total_10;
+            case 11:
+                return R.drawable.total_11;
+            case 12:
+                return R.drawable.total_12;
+            case 13:
+                return R.drawable.total_13;
+            case 14:
+                return R.drawable.total_14;
+            case 15:
+                return R.drawable.total_15;
+            case 16:
+                return R.drawable.total_16;
+            case 17:
+                return R.drawable.total_17;
+            case 18:
+                return R.drawable.total_18;
+            case 19:
+                return R.drawable.total_19;
+            case 20:
+                return R.drawable.total_20;
+            case 21:
+                return R.drawable.total_21;
+            case 22:
+                return R.drawable.total_22;
+            case 23:
+                return R.drawable.total_23;
+            case 24:
+                return R.drawable.total_24;
+            case 25:
+                return R.drawable.total_25;
+            case 26:
+                return R.drawable.total_26;
+            case 27:
+                return R.drawable.total_27;
+            case 28:
+                return R.drawable.total_28;
+            case 29:
+                return R.drawable.total_29;
+            case 30:
+                return R.drawable.total_30;
+            default:
+                return -1;
+        }
+    }
 }

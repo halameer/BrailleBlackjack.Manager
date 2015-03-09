@@ -2,8 +2,11 @@ package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -11,9 +14,16 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -24,6 +34,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Demonstrates a "screen-slide" animation using a {@link android.support.v4.view.ViewPager}. Because {@link android.support.v4.view.ViewPager}
@@ -39,6 +50,13 @@ import java.util.Random;
 public class AboutActivity extends Activity {
     private static final String TAG = "WearActivity";
     private GoogleApiClient mGoogleApiClient;
+    private Button mButton;
+    private ImageView mCard;
+    private ImageView mCard2;
+    private ViewGroup group;
+    private View view;
+    final Context context = this;
+    final ReentrantLock lock = new ReentrantLock();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +70,66 @@ public class AboutActivity extends Activity {
         mGoogleApiClient.connect();
         Log.d(TAG, "Connected to Google Api Client");
 
-        sendMessage("/MESSAGE");
 
-        /* Testing Database */
-        // Create a new deck database
-        Deck deck = new Deck(this);
-        Card card = deck.getCard(generateRandomCard());
-        testDialog(card);
+        //sendMessage("/MESSAGE");
+        group = (ViewGroup) findViewById(R.id.relativeLayout);
+
+        mCard = (ImageView) findViewById(R.id.cardImage);
+        mCard2 = (ImageView) findViewById(R.id.cardImage2);
+        mButton = (Button) findViewById(R.id.cardButton);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Lock button until animation done");
+                mButton.setEnabled(false);
+                /* Testing Database */
+                // Create a new deck database
+                Deck deck = new Deck(context);
+                Card card = deck.getCard(generateRandomCard());
+                Card card2 = deck.getCard(generateRandomCard());
+                new MyTask().execute(card.getCardDrawable(), card2.getCardDrawable());
+            }
+        });
+
+
+        //testDialog(card);
     }
+
+    private class MyTask extends AsyncTask<Integer, Void, Integer[]> {
+        @Override
+        protected void onPreExecute() {
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(mCard, mCard2);
+        }
+
+        @Override
+        protected Integer[] doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Integer... params) {
+            mCard.setImageResource(params[0]);
+            mCard2.setImageResource(params[1]);
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(mCard, mCard2);
+            mButton.setEnabled(true);
+        }
+    }
+
+    private static void toggleVisibility(View... views) {
+        for (View view : views) {
+            boolean isVisible = view.getVisibility() == View.VISIBLE;
+            view.setVisibility(isVisible ? View.INVISIBLE : View.VISIBLE);
+        }
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

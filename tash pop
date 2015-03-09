@@ -1,0 +1,109 @@
+[33mcommit 91ae2f2a83cc0ec06d6dc2903f7f5350c32ce0be[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Sat Mar 7 22:55:43 2015 -0800
+
+    - Created Android Wear Interface
+    - Wear MainActivity has 2 buttons
+    - Communication to and from Android Wear added, messages can be sent back and forth
+    - Wear Vibrates upon receiving a message from the phone
+    - Phone shows a toast when it receives a message from the wear
+
+[33mcommit e4b1c6f2217cef1ad71700e7cb52f064b32814df[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Fri Mar 6 22:47:18 2015 -0800
+
+    - Database part complete, 52 cards are added and can be called without any problems
+    - Added images to display possible card totals
+
+[33mcommit fc917d07c90ee968e1ece7c90f2c41d6cf4abbc4[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Fri Mar 6 18:50:30 2015 -0800
+
+    Finished basic Black Jack Value logic.  Still need to add images and button clicks.
+
+[33mcommit 22506aba9a431d9fcc69cd9d597b6c695baaf55f[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Fri Mar 6 18:41:12 2015 -0800
+
+    Fixed the error with getting the context in PlayBlackJackGAmeFragment
+    Fixed the R.id.action_previous, it was missing in ids.xml
+
+[33mcommit f04d61d73d77fd4364a6e44a0684410f96bfef81[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Fri Mar 6 18:18:50 2015 -0800
+
+    Added initial black jack logic.
+
+[33mcommit 0146acf097ec62269bd4f61d8e6f5fad0f98c189[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Fri Mar 6 18:17:05 2015 -0800
+
+    The database logic works, need to fill database with deck content
+    Created generateRandomCard method
+
+[33mcommit 3e155941935aaba9112e695f348c8e801bf4eb0a[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Fri Mar 6 02:46:02 2015 -0800
+
+    Added framework for Black Jack logic.
+
+[33mcommit ee74f89fd943f5b82b13c12632b598a899c76d19[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Thu Mar 5 12:50:32 2015 -0800
+
+    Added framework for Black Jack and About Page
+
+[33mcommit 369915c1e53eb22b3f46b8c12cd9d9d638b332f3[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Thu Mar 5 11:54:17 2015 -0800
+
+    Added Talk-Back descriptions for the Learning Braille Cards.
+
+[33mcommit 0fff008087892ef0ae0feff6038bcfb630f2d4d8[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Thu Mar 5 11:04:54 2015 -0800
+
+    Completed the learning section of the app.
+
+[33mcommit 5d5b5734a79d0dd96896a90f8f140ed5c4d69df6[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Thu Mar 5 01:21:44 2015 -0800
+
+    1. Added card description strings in strings.xml
+    2. Renamed card braille images dues to requirements of starting a resource with a lowercase letter and not a number
+
+[33mcommit a7a00f675a359fdd23d30fd06d4b89bc61cdce59[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Wed Mar 4 22:54:40 2015 -0800
+
+    Added the braille card images
+
+[33mcommit 8dbed44a9ee584ae7d806535e2f3bbb25f91dbda[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Wed Mar 4 22:52:12 2015 -0800
+
+    Forgot to actually add the files, they're added now
+
+[33mcommit 274b40322ff2fcafe8ee32695699dc843ca09ca3[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Wed Mar 4 22:43:29 2015 -0800
+
+    Added a deck database class, a deck operations class, and a card class
+
+[33mcommit 5b8e8dc0d4c75ce8d8694573bec7c65adf7c3510[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Wed Mar 4 19:00:36 2015 -0800
+
+    Removed previous fragments.  Started from scratch with a new MainActivity and a seperate ViewPager Activity to implementing the swiping for "Learning Braille".
+
+[33mcommit 87f7bb280704fdf0c5d8d56569080214ef81f7ab[m
+Author: Tu Truong <truongtu@pdx.edu>
+Date:   Wed Mar 4 13:53:32 2015 -0800
+
+    Added Fragments and SwitchFragment Function
+
+[33mcommit 47ed9ceea5deb19e90e7edff4bc09f014e15799f[m
+Author: halameer <halameer@users.noreply.github.com>
+Date:   Mon Mar 2 16:01:07 2015 -0800
+
+    Initial commit

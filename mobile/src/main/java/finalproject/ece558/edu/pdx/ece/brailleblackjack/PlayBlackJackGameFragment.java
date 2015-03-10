@@ -54,9 +54,12 @@ public class PlayBlackJackGameFragment extends Fragment {
 
     private boolean dealer_had_ace;
     private boolean player_had_ace;
-    private boolean dealers_turn;
+    private boolean dealer_turn;
     private boolean player_turn;
     private boolean first_time_dealer = true;
+
+    private boolean button_hit_state = true;
+    private boolean button_stand_state = true;
 
     private Button button_hit;
     private Button button_stand;
@@ -64,6 +67,8 @@ public class PlayBlackJackGameFragment extends Fragment {
 
     private View v;
     private Context context = null;
+
+    // Saved States
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
         player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
         player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
+
 
         dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
         dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
@@ -323,9 +329,12 @@ public class PlayBlackJackGameFragment extends Fragment {
         Log.d(TAG, "In dealerSetup");
         int final_player_total;
 
-        dealers_turn = true;
-        button_hit.setEnabled(false);
-        button_stand.setEnabled(false);
+        button_hit_state = false;
+        button_stand_state = false;
+
+        dealer_turn = true;
+        button_hit.setEnabled(button_hit_state);
+        button_stand.setEnabled(button_stand_state);
 
         // Grab a new card.
         dealer_left_card = dealer_right_card;
@@ -453,7 +462,7 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_bot_total_slot.setVisibility(v.INVISIBLE);
         }
 
-        if (dealers_turn) {
+        if (dealer_turn) {
             // Is it the first time for the dealer?
             //  if yes then only reveal the hidden (left card)
             if(first_time_dealer){
@@ -625,6 +634,21 @@ public class PlayBlackJackGameFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("DEALER_HAD_ACE", dealer_had_ace);
+        outState.putBoolean("PLAYER_HAD_ACE", player_had_ace);
+        outState.putBoolean("DEALER_TURN", dealer_turn);
+        outState.putBoolean("PLAYER_TURN", player_turn);
+        outState.putBoolean("FIRST_TIME_DEALER", first_time_dealer);
+
+        outState.putInt("DEALER_TOP_TOTAL_VALUE", dealer_top_total_value);
+        outState.putInt("DEALER_BOT_TOTAL_VALUE", dealer_bot_total_value);
+        outState.putInt("PLAYER_TOP_TOTAL_VALUE", player_top_total_value);
+        outState.putInt("PLAYER_BOT_TOTAL_VALUE", dealer_bot_total_value);
+
+        outState.putBoolean("BUTTON_HIT_STATE", button_hit_state);
+        outState.putBoolean("BUTTON_STAND_STATE", button_stand_state);
+
+
         super.onSaveInstanceState(outState);
     }
 
@@ -943,6 +967,13 @@ public class PlayBlackJackGameFragment extends Fragment {
 
 
     public void finishedDialog(String header, String body) {
+        button_hit_state = false;
+        button_stand_state = false;
+
+        button_hit.setEnabled(button_hit_state);
+        button_stand.setEnabled(button_stand_state);
+
+
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(header);

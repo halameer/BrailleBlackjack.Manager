@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
                                         final Node node = nodes.get(i);
 
                                         // You can just send a message
-                                        Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/MESSAGE", null);
+                                        Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "#HIT", null);
                                     }
                                 }
                             }

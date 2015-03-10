@@ -24,10 +24,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
@@ -47,7 +51,11 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @see LearnBrailleFragment
  */
-public class AboutActivity extends Activity {
+public class AboutActivity extends Activity  implements
+        MessageApi.MessageListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
     private static final String TAG = "WearActivity";
     private GoogleApiClient mGoogleApiClient;
     private Button mButton;
@@ -66,12 +74,13 @@ public class AboutActivity extends Activity {
         Log.d(TAG, "Attempting to connect to Google Api Client");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
                 .build();
-        mGoogleApiClient.connect();
         Log.d(TAG, "Connected to Google Api Client");
 
-
-        //sendMessage("/MESSAGE");
+        //Talk to watch, start its app
+        sendMessage("#START");
         group = (ViewGroup) findViewById(R.id.relativeLayout);
 
         mCard = (ImageView) findViewById(R.id.cardImage);
@@ -80,7 +89,9 @@ public class AboutActivity extends Activity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendMessage("#MESSAGE");
                 Log.d(TAG, "Lock button until animation done");
+                // Make button non-pressable pending animation
                 mButton.setEnabled(false);
                 /* Testing Database */
                 // Create a new deck database
@@ -94,6 +105,62 @@ public class AboutActivity extends Activity {
 
         //testDialog(card);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "Connected to Google Api Service");
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "Connected to Google Api Service");
+        }
+        Wearable.MessageApi.addListener(mGoogleApiClient, this);
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+        super.onStop();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "onConnectionSuspended");
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed");
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        //super.onMessageReceived(messageEvent);
+        Log.d(TAG, "In onMessageReceived");
+        if("/MESSAGE".equals(messageEvent.getPath())) {
+            // launch some Activity or do anything you like
+            Context context = getApplicationContext();
+            CharSequence text = "Wear Sent a Message! Hit was Pressed!!! :)";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }  else if("#HIT".equals(messageEvent.getPath())){
+            runOnUiThread(new Runnable(){
+                public void run() {
+                    mButton.performClick();
+                }
+            });
+        }
+    }
+
 
     private class MyTask extends AsyncTask<Integer, Void, Integer[]> {
         @Override
@@ -122,6 +189,12 @@ public class AboutActivity extends Activity {
         }
     }
 
+    /**
+     * Toggle the visibilities of view objects (i.e. hide and show a an ImageView. Taken from a website that introduces
+     *  transition animations on android
+     * Source: http://www.androiddesignpatterns.com/2014/12/activity-fragment-transitions-in-android-lollipop-part1.html
+     * @param views View objects toggle visibility of
+     */
     private static void toggleVisibility(View... views) {
         for (View view : views) {
             boolean isVisible = view.getVisibility() == View.VISIBLE;
@@ -224,12 +297,10 @@ public class AboutActivity extends Activity {
         nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
             @Override
             public void onResult(NodeApi.GetConnectedNodesResult result) {
-                Log.d(TAG, "Inside onResult");
                 final List<Node> nodes = result.getNodes();
                 if (nodes != null) {
                     Log.d(TAG, "Going to send message");
                     for (int i = 0; i < nodes.size(); i++) {
-                        Log.d(TAG, "Sending part: " + i);
                         final Node node = nodes.get(i);
 
                         // You can just send a message

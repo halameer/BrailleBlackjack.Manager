@@ -22,7 +22,8 @@ public class PlayBlackJackStartFragment extends Fragment {
         }
 
         View v = inflater.inflate(R.layout.fragment_play_black_jack_start, container, false);
-                /* Hit button Listener */
+
+        // Start the game
         Button start_black_jack = (Button)v.findViewById(R.id.lpBlackJack);
         start_black_jack.setOnClickListener(new View.OnClickListener() {
             @Override

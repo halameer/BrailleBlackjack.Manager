@@ -15,6 +15,14 @@
         <string name="action_previous">Previous</string>
         <string name="action_next">Next</string>
         <string name="action_finish">Finished</string>
+        <string name="give_up">Give Up</string>
+        <string name="try_again">Try Again</string>
+
+        <string name="player_wins">YOU WIN!</string>
+        <string name="player_loses">YOU LOST!</string>
+        <string name="player_pushed">PLAYER AND DEALER PUSHED!</string>
+        <string name="player_busted">YOU BUSTED!</string>
+        <string name="dealer_busted">DEALER BUSTED!</string>
 
         <!-- Learning Braille Description -->
         <string name="description_numbers">Explaining numbers in Braille</string>

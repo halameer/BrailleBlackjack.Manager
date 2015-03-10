@@ -1,7 +1,10 @@
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -209,8 +212,10 @@ public class PlayBlackJackGameFragment extends Fragment {
                 // Hide the player's bot total
                 player_bot_total_value = 0;
             } else if (player_top_total_value > 21) {
-                // Player loses.
-                // Pop up a notification.
+                // Player busted, player loses
+                finishedDialog(getResources().getString(R.string.player_loses),
+                        getResources().getString(R.string.player_busted) +
+                                "\nPlayer had " + player_top_total_value);
             }
         } else {
 
@@ -241,6 +246,10 @@ public class PlayBlackJackGameFragment extends Fragment {
                         player_top_total_value += 1;
 
                         // Player busted and lost
+                        finishedDialog(getResources().getString(R.string.player_loses),
+                                getResources().getString(R.string.player_busted) +
+                                        "\nPlayer had " + player_top_total_value);
+
                     }
                     // Player hit 21 not through a black jack, start the dealer turn to see if
                     // the dealer hit 21
@@ -267,6 +276,9 @@ public class PlayBlackJackGameFragment extends Fragment {
                 if (player_top_total_value > 21) {
                     // Player busted
                     // Player loses
+                    finishedDialog(getResources().getString(R.string.player_loses),
+                            getResources().getString(R.string.player_busted) +
+                                    "\nPlayer had " + player_top_total_value);
                 }
             }
         }
@@ -285,6 +297,8 @@ public class PlayBlackJackGameFragment extends Fragment {
         int final_player_total;
 
         dealers_turn = true;
+        button_hit.setEnabled(false);
+        button_stand.setEnabled(false);
 
         // Implement Delay
 
@@ -297,6 +311,8 @@ public class PlayBlackJackGameFragment extends Fragment {
         dealer_left_card = dealer_right_card;
         dealer_right_card = curDeck.getCard(generateRandomCard());
 
+        dealer_top_total_value += dealer_right_card.getCardValue();
+
         // Grab cards for dealer
         // Left card IS an Ace, right card is NOT an Ace
         if (dealer_left_card.getCardValue() == 1 && dealer_right_card.getCardValue() > 1) {
@@ -306,9 +322,13 @@ public class PlayBlackJackGameFragment extends Fragment {
                 if (final_player_total == 21) {
                     // Dealer and Player Push
                     // Pop up notification
+                    finishedDialog(getResources().getString(R.string.player_pushed),
+                                    "Dealer had " + dealer_top_total_value +
+                                    "\nPlayer had " + player_top_total_value);
                 } else {
-                    // Player Loses
-                    // Pop up notification
+                    finishedDialog(getResources().getString(R.string.player_loses),
+                                    "Dealer had " + dealer_top_total_value +
+                                    "\nPlayer had " + player_top_total_value);
                 }
             }
             // Dealer didn't get a black jack
@@ -327,10 +347,13 @@ public class PlayBlackJackGameFragment extends Fragment {
             if (dealer_right_card.getCardValue() == 10) {
                 if (final_player_total == 21) {
                     // Dealer and Player Push
-                    // Pop up notification
+                    finishedDialog(getResources().getString(R.string.player_pushed),
+                            "Dealer had " + dealer_top_total_value +
+                                    "\nPlayer had " + player_top_total_value);
                 } else {
-                    // Player Loses
-                    // Pop up notification
+                    finishedDialog(getResources().getString(R.string.player_loses),
+                            "Dealer had " + dealer_top_total_value +
+                                    "\nPlayer had " + player_top_total_value);
                 }
             }
             // Dealer didn't get a black jack
@@ -714,22 +737,36 @@ public class PlayBlackJackGameFragment extends Fragment {
                     : dealer_bot_total_value;
 
             if (highest_dealer_total > 21) {
+                // Dealer busted.
                 // Player wins.
-                // Pop up a notification.
+                finishedDialog(getResources().getString(R.string.player_wins),
+                        getResources().getString(R.string.dealer_busted));
             } else if (highest_dealer_total <= 17) {
                 if (highest_player_total > highest_dealer_total) {
                     dealerHits();
                 } else if (highest_player_total < highest_dealer_total) {
                     // Player loses
+                    finishedDialog(getResources().getString(R.string.player_loses),
+                            "Dealer had " + highest_dealer_total +
+                            "\nPlayer had " + highest_player_total);
                 } else if (highest_player_total > highest_dealer_total) {
                     // Player wins
+                    finishedDialog(getResources().getString(R.string.player_wins),
+                            "Dealer had " + highest_dealer_total +
+                                    "\nPlayer had " + highest_player_total);
                 }
 
             } else if (dealer_top_total_value > 17) {
                 if (highest_player_total < highest_dealer_total) {
                     // Player Loses
+                    finishedDialog(getResources().getString(R.string.player_loses),
+                            "Dealer had " + highest_dealer_total +
+                                    "\nPlayer had " + highest_player_total);
                 } else {
                     // Player wins
+                    finishedDialog(getResources().getString(R.string.player_wins),
+                            "Dealer had " + highest_dealer_total +
+                                    "\nPlayer had " + highest_player_total);
                 }
             }
         }
@@ -738,7 +775,7 @@ public class PlayBlackJackGameFragment extends Fragment {
     private class DelayDealerHit extends AsyncTask<Void, Void, Void[]> {
         @Override
         protected void onPreExecute() {
-            Log.d(TAG, "In Dealerhit");
+            Log.d(TAG, "In Dealer Hit");
         }
 
         @Override
@@ -754,9 +791,20 @@ public class PlayBlackJackGameFragment extends Fragment {
         @Override
         protected void onPostExecute(Void... params) {
             int highest_dealer_total;
+            int highest_player_total;
             // Grab a new card.
             dealer_left_card = dealer_right_card;
             dealer_right_card = curDeck.getCard(generateRandomCard());
+
+            // Grab the player's highest total
+            highest_player_total = (player_top_total_value > player_bot_total_value)
+                    ? player_top_total_value
+                    : player_bot_total_value;
+
+            // Grab the dealers's highest total
+            highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
+                    ? dealer_top_total_value
+                    : dealer_bot_total_value;
 
             // Dealer drew an ace
             if (dealer_right_card.getCardValue() == 1) {
@@ -766,7 +814,7 @@ public class PlayBlackJackGameFragment extends Fragment {
                     dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
                     dealer_bot_total_value = dealer_bot_total_value + dealer_right_card.getCardValue();
 
-                    // Grab the player's highest total
+                    // Grab the dealers's highest total
                     highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
                             ? dealer_top_total_value
                             : dealer_bot_total_value;
@@ -779,7 +827,10 @@ public class PlayBlackJackGameFragment extends Fragment {
                         dealer_bot_total_value = 0;
                     } else if (dealer_top_total_value > 21) {
                         // Dealer Busts, player wins
-                        // Display Notification
+                        finishedDialog(getResources().getString(R.string.player_wins),
+                                getResources().getString(R.string.dealer_busted) +
+                                        "\n\nDealer had " + highest_dealer_total +
+                                        "\nPlayer had " + highest_player_total);
                     }
                 }
                 // Dealer just drew his first ace
@@ -788,13 +839,17 @@ public class PlayBlackJackGameFragment extends Fragment {
                     dealer_bot_total_value = dealer_top_total_value + 11;
 
                     if (dealer_bot_total_value > 21) {
+                        // Hide dealer's bot total
                         dealer_bot_total_value = 0;
                     }
 
                     dealer_top_total_value += 1;
                     if (dealer_top_total_value > 21) {
-                        // Dealer Busted
-                        // Player Wins
+                        // Dealer Busts, player wins
+                        finishedDialog(getResources().getString(R.string.player_wins),
+                                getResources().getString(R.string.dealer_busted) +
+                                        "\n\nDealer had " + highest_dealer_total +
+                                        "\nPlayer had " + highest_player_total);
                     }
                 }
             }
@@ -804,15 +859,22 @@ public class PlayBlackJackGameFragment extends Fragment {
                 dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
 
                 if (dealer_top_total_value > 21) {
-                    // Dealer Busted
-                    // Player Wins
+                    // Dealer Busts, player wins
+                    finishedDialog(getResources().getString(R.string.player_wins),
+                            getResources().getString(R.string.dealer_busted) +
+                                    "\n\nDealer had " + highest_dealer_total +
+                                    "\nPlayer had " + highest_player_total);
                 }
             }
 
             updateView();
         }
     }
+
+
+
     public void notification(String eventTitle, String eventContent){
+
         int notificationId = 001;
         // Build intent for notification content
         //Intent viewIntent = new Intent();
@@ -835,4 +897,24 @@ public class PlayBlackJackGameFragment extends Fragment {
         // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());
     }
+
+
+
+        public Dialog finishedDialog(String header, String body) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(header + "\n\n" + body)
+                    .setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                        }
+                    })
+                    .setNegativeButton(R.string.give_up, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
 }

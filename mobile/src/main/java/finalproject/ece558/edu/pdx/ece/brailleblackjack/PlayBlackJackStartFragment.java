@@ -28,9 +28,9 @@ public class PlayBlackJackStartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fm = getFragmentManager().beginTransaction();
-                fm.replace(R.id.fragment_container, new PlayBlackJackStartFragment());
+                fm.replace(R.id.fragment_container, new PlayBlackJackGameFragment());
                 fm.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                fm.addToBackStack(null);
+                //fm.addToBackStack(null);
                 fm.commit();
 
             }

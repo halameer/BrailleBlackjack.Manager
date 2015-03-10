@@ -85,6 +85,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         // the previous article selection set by onSaveInstanceState().
         // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
+        } else {
             // Grab the single dealer card on the right and the two player cards
             curDeck = new Deck(context);
             dealer_right_card = curDeck.getCard(generateRandomCard());
@@ -150,9 +151,6 @@ public class PlayBlackJackGameFragment extends Fragment {
             // Next update view should be a player turn
             player_turn = true;
 
-        } else {
-
-            // save the values and states
 
         }
 
@@ -477,22 +475,20 @@ public class PlayBlackJackGameFragment extends Fragment {
 
 
     public void updateView() {
-        dealer_top_total_slot.setImageDrawable(getResources()
-                .getDrawable(dealer_top_total_value));
+        dealer_top_total_slot.setImageResource(giveTotalDrawable(dealer_top_total_value));
 
-        player_top_total_slot.setImageDrawable(getResources()
-                .getDrawable(player_top_total_value));
+        player_top_total_slot.setImageResource(giveTotalDrawable(player_top_total_value));
 
         if (player_bot_total_value > 0) {
-            player_bot_total_slot.setImageDrawable(getResources()
-                    .getDrawable(player_bot_total_value));
+            player_bot_total_slot.setImageResource(giveTotalDrawable(player_bot_total_value));
+            player_bot_total_slot.setVisibility(v.VISIBLE);
         } else {
             player_bot_total_slot.setVisibility(v.INVISIBLE);
         }
 
         if (dealer_bot_total_value > 0) {
-            dealer_bot_total_slot.setImageDrawable(getResources()
-                    .getDrawable(dealer_bot_total_value));
+            dealer_bot_total_slot.setImageResource(giveTotalDrawable(dealer_bot_total_value));
+            dealer_bot_total_slot.setVisibility(v.VISIBLE);
         } else {
             dealer_bot_total_slot.setVisibility(v.INVISIBLE);
         }
@@ -523,7 +519,7 @@ public class PlayBlackJackGameFragment extends Fragment {
                 player_left_slot.setContentDescription(player_left_card.getCardDescription());
                 player_right_slot.setContentDescription(player_right_card.getCardDescription());
 
-                new FirstDealAnimation().execute(player_left_card.getCardDrawable(),
+                new FirstDealAnimation().execute(dealer_right_card.getCardDrawable(), player_left_card.getCardDrawable(),
                         player_right_card.getCardDrawable());
             }
         }

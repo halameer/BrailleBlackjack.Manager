@@ -55,7 +55,6 @@ public class LearnBrailleFragment extends android.support.v4.app.Fragment {
 
         switch (mPageNumber+1) {
             case 1:
-
                 img.setImageDrawable(getResources().getDrawable(R.drawable.numbers));
                 img.setContentDescription(getResources().getString(R.string.description_numbers));
                 break;

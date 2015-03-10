@@ -44,6 +44,8 @@ public class MainActivity extends ListActivity {
     private static Selection[] mSelections;
 
     public void onCreate(Bundle savedInstanceState) {
+        Deck d = new Deck(this);
+        d.insertCard("1_of_clubs", getString(R.string.description_1_clubs), R.drawable.clubs_ace, 1);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

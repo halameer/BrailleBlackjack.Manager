@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.transition.Explode;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,8 @@ import java.util.Random;
 public class PlayBlackJackGameFragment extends Fragment {
 
     private Deck curDeck;
+
+    private ViewGroup group;
 
     private ImageView dealer_left_slot;
     private ImageView dealer_right_slot;
@@ -61,11 +66,23 @@ public class PlayBlackJackGameFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_play_black_jack_game, container, false);
+        // Bind views
+        group = (ViewGroup) v.findViewById(R.id.playFragment);
+
+        dealer_left_slot = (ImageView) v.findViewById(R.id.img_view_dealer_left_card);
+        dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
+        player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
+        player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
+
+        dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
+        dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
+        player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
+        player_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_player_bot_total);
+
         // If activity recreated (such as from screen rotate), restore
         // the previous article selection set by onSaveInstanceState().
         // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
-
             // Grab the single dealer card on the right and the two player cards
             curDeck = new Deck(context);
             dealer_right_card = curDeck.getCard(generateRandomCard());
@@ -477,6 +494,45 @@ public class PlayBlackJackGameFragment extends Fragment {
         player_right_slot.setContentDescription(player_right_card.getCardDescription());
     }
 
+    private class MyTask extends AsyncTask<Integer, Void, Integer[]> {
+        @Override
+        protected void onPreExecute() {
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(dealer_left_slot, dealer_right_slot);
+        }
+
+        @Override
+        protected Integer[] doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Integer... params) {
+            //mCard.setImageResource(params[0]);
+            //mCard2.setImageResource(params[1]);
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            //toggleVisibility(mCard, mCard2);
+            //mButton.setEnabled(true);
+        }
+    }
+
+    /**
+     * Toggle the visibilities of view objects (i.e. hide and show a an ImageView. Taken from a website that introduces
+     *  transition animations on android
+     * Source: http://www.androiddesignpatterns.com/2014/12/activity-fragment-transitions-in-android-lollipop-part1.html
+     * @param views View objects toggle visibility of
+     */
+    private static void toggleVisibility(View... views) {
+        for (View view : views) {
+            boolean isVisible = view.getVisibility() == View.VISIBLE;
+            view.setVisibility(isVisible ? View.INVISIBLE : View.VISIBLE);
+        }
+    }
 
     @Override
     public void onStart() {

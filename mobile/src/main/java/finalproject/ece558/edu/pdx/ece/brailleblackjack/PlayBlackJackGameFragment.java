@@ -47,6 +47,8 @@ public class PlayBlackJackGameFragment extends Fragment {
     private boolean dealer_had_ace;
     private boolean player_had_ace;
     private boolean dealers_turn;
+    private boolean player_turn;
+    private boolean first_time_dealer = true;
 
     private Button button_hit;
     private Button button_stand;
@@ -143,8 +145,10 @@ public class PlayBlackJackGameFragment extends Fragment {
                 player_had_ace = false;
             }
 
-            button_hit.findViewById(R.id.button_hit);
-            button_stand.findViewById(R.id.button_stand);
+            /* UPDATE THE VIEWS */
+            updateView();
+            // Next update view should be a player turn
+            player_turn = true;
 
         } else {
 
@@ -152,7 +156,23 @@ public class PlayBlackJackGameFragment extends Fragment {
 
         }
 
-        updateView();
+        /* Hit button Listener */
+        button_hit = (Button) v.findViewById(R.id.button_hit);
+        button_hit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playerHits();
+            }
+        });
+
+        /* Stand button Listener */
+        button_stand = (Button) v.findViewById(R.id.button_stand);
+        button_stand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playerStands();
+            }
+        });
         // Inflate the layout for this fragment
         return v;
     }
@@ -300,7 +320,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         // Left card is NOT an Ace, right card IS an Ace
         else if (dealer_right_card.getCardValue() == 1 && dealer_left_card.getCardValue() > 1) {
             // Dealer's first card was 10, second card is an Ace
-            // Dealer got Black Jack
+            // Dealer got Black ShouldJack
             if (dealer_right_card.getCardValue() == 10) {
                 if (final_player_total == 21) {
                     // Dealer and Player Push
@@ -332,7 +352,6 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_bot_total_value = 0;
             dealer_had_ace = false;
         }
-
         updateView();
     }
 
@@ -476,25 +495,93 @@ public class PlayBlackJackGameFragment extends Fragment {
         }
 
         if (dealers_turn) {
-            dealer_left_slot.setImageDrawable(getResources()
-                    .getDrawable(dealer_left_card.getCardDrawable()));
-            dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
+            // Is it the first time for the dealer?
+            //  if yes then only reveal the hidden (left card)
+            if(first_time_dealer){
+                first_time_dealer = false;
+                dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
+                new LeftDealerAnimation().execute(dealer_left_card.getCardDrawable());
+            } else{
+                dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
+                dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
+                new AnimateDealerCards().execute(dealer_left_card.getCardDrawable(),
+                        dealer_right_card.getCardDrawable());
+            }
+        } else{
+            // Check if this is the first deal/turn or if its just a player "hit"
+            if(player_turn){
+                player_left_slot.setContentDescription(player_left_card.getCardDescription());
+                player_right_slot.setContentDescription(player_right_card.getCardDescription());
+                new AnimatePlayerCards().execute(player_left_card.getCardDrawable(),
+                        player_right_card.getCardDrawable());
+            } else{
+                //This is the first deal/turn
+                dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
+                player_left_slot.setContentDescription(player_left_card.getCardDescription());
+                player_right_slot.setContentDescription(player_right_card.getCardDescription());
+
+                new FirstDealAnimation().execute(player_left_card.getCardDrawable(),
+                        player_right_card.getCardDrawable());
+            }
         }
-
-        dealer_right_slot.setImageDrawable(getResources()
-                .getDrawable(dealer_right_card.getCardDrawable()));
-        dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
-
-        player_left_slot.setImageDrawable(getResources()
-                .getDrawable(player_left_card.getCardDrawable()));
-        player_left_slot.setContentDescription(player_left_card.getCardDescription());
-
-        player_right_slot.setImageDrawable(getResources()
-                .getDrawable(player_right_card.getCardDrawable()));
-        player_right_slot.setContentDescription(player_right_card.getCardDescription());
     }
 
-    private class MyTask extends AsyncTask<Integer, Void, Integer[]> {
+    private class FirstDealAnimation extends AsyncTask<Integer, Void, Integer[]> {
+        @Override
+        protected void onPreExecute() {
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(dealer_right_slot, player_left_slot, player_right_slot);
+        }
+
+        @Override
+        protected Integer[] doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Integer... params) {
+            dealer_right_slot.setImageResource(params[0]);
+            player_left_slot.setImageResource(params[1]);
+            player_right_slot.setImageResource(params[2]);
+
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(dealer_right_slot, player_left_slot, player_right_slot);
+            //mButton.setEnabled(true);
+        }
+    }
+
+    private class LeftDealerAnimation extends AsyncTask<Integer, Void, Integer[]> {
+        @Override
+        protected void onPreExecute() {
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(dealer_left_slot);
+        }
+
+        @Override
+        protected Integer[] doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Integer... params) {
+            dealer_left_slot.setImageResource(params[0]);
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(dealer_left_slot);
+            //mButton.setEnabled(true);
+        }
+    }
+
+    private class AnimateDealerCards extends AsyncTask<Integer, Void, Integer[]> {
         @Override
         protected void onPreExecute() {
             TransitionManager.beginDelayedTransition(group, new Explode());
@@ -513,10 +600,39 @@ public class PlayBlackJackGameFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Integer... params) {
-            //mCard.setImageResource(params[0]);
-            //mCard2.setImageResource(params[1]);
+            dealer_left_slot.setImageResource(params[0]);
+            dealer_right_slot.setImageResource(params[1]);
+
             TransitionManager.beginDelayedTransition(group, new Explode());
-            //toggleVisibility(mCard, mCard2);
+            toggleVisibility(dealer_left_slot, dealer_right_slot);
+            //mButton.setEnabled(true);
+        }
+    }
+
+    private class AnimatePlayerCards extends AsyncTask<Integer, Void, Integer[]> {
+        @Override
+        protected void onPreExecute() {
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(player_left_slot, player_right_slot);
+        }
+
+        @Override
+        protected Integer[] doInBackground(Integer... params) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Integer... params) {
+            player_left_slot.setImageResource(params[0]);
+            player_right_slot.setImageResource(params[1]);
+
+            TransitionManager.beginDelayedTransition(group, new Explode());
+            toggleVisibility(dealer_left_slot, dealer_right_slot, player_left_slot, player_right_slot);
             //mButton.setEnabled(true);
         }
     }

@@ -20,6 +20,7 @@ import java.util.Random;
 
 public class PlayBlackJackGameFragment extends Fragment {
 
+    private static final String TAG = "PlayBlackJackFragment";
     private Deck curDeck;
 
     private ViewGroup group;
@@ -350,113 +351,19 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_bot_total_value = 0;
             dealer_had_ace = false;
         }
-
+        updateView();
 
         checkWinner();
-
-        updateView();
 
     }
 
 
     public void dealerHits() {
-        int highest_dealer_total;
-
-        // Implement delay
-
-
-        // Grab a new card.
-        dealer_left_card = dealer_right_card;
-        dealer_right_card = curDeck.getCard(generateRandomCard());
-
-        // Dealer drew an ace
-        if (dealer_right_card.getCardValue() == 1) {
-            // Dealer had an ace before, need to deal with both values
-            if (dealer_had_ace) {
-                // Grab the card totals
-                dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
-                dealer_bot_total_value = dealer_bot_total_value + dealer_right_card.getCardValue();
-
-                // Grab the player's highest total
-                highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
-                        ? dealer_top_total_value
-                        : dealer_bot_total_value;
-
-                // Check if dealer has higher total than player
-                // The Ace being 11 will cause the dealer to bust.
-                if (dealer_bot_total_value > 21
-                        && dealer_top_total_value < 21) {
-                    // Hide the dealer's bot total
-                    dealer_bot_total_value = 0;
-                } else if (dealer_top_total_value > 21) {
-                    // Dealer Busts, player wins
-                    // Display Notification
-                }
-            }
-            // Dealer just drew his first ace
-            else {
-                dealer_had_ace = true;
-                dealer_bot_total_value = dealer_top_total_value + 11;
-
-                if (dealer_bot_total_value > 21) {
-                    dealer_bot_total_value = 0;
-                }
-
-                dealer_top_total_value += 1;
-                if (dealer_top_total_value > 21) {
-                    // Dealer Busted
-                    // Player Wins
-                }
-            }
-        }
-        // Dealer has never drawn an ace
-        // Check if the dealer busted
-        else {
-            dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
-
-            if (dealer_top_total_value > 21) {
-                // Dealer Busted
-                // Player Wins
-            }
-        }
-
-        updateView();
-
+        new DelayDealerHit().execute();
     }
 
     public void checkWinner() {
-        int highest_dealer_total;
-        int highest_player_total;
-
-        // Grab the player's highest total
-        highest_player_total = (player_top_total_value > player_bot_total_value)
-                ? player_top_total_value
-                : player_bot_total_value;
-
-        // Grab the player's highest total
-        highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
-                ? dealer_top_total_value
-                : dealer_bot_total_value;
-
-        if (highest_dealer_total > 21) {
-            // Player wins.
-            // Pop up a notification.
-        } else if (highest_dealer_total <= 17) {
-            if (highest_player_total > highest_dealer_total) {
-                dealerHits();
-            } else if (highest_player_total < highest_dealer_total) {
-                // Player loses
-            } else if (highest_player_total > highest_dealer_total) {
-                // Player wins
-            }
-
-        } else if (dealer_top_total_value > 17) {
-            if (highest_player_total < highest_dealer_total) {
-                // Player Loses
-            } else {
-                // Player wins
-            }
-        }
+        new DelayCheckWinner().execute();
     }
 
     public void threadDelay() {
@@ -759,7 +666,138 @@ public class PlayBlackJackGameFragment extends Fragment {
             case 30:
                 return R.drawable.total_30;
             default:
-                return -1;
+                return R.drawable.total_1;
+        }
+    }
+
+    private class DelayCheckWinner extends AsyncTask<Void, Void, Void[]> {
+        @Override
+        protected void onPreExecute() {
+            Log.d(TAG, "In CheckWinner");
+        }
+
+        @Override
+        protected Void[] doInBackground(Void... params) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Void... params) {
+            int highest_dealer_total;
+            int highest_player_total;
+
+            // Grab the player's highest total
+            highest_player_total = (player_top_total_value > player_bot_total_value)
+                    ? player_top_total_value
+                    : player_bot_total_value;
+
+            // Grab the player's highest total
+            highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
+                    ? dealer_top_total_value
+                    : dealer_bot_total_value;
+
+            if (highest_dealer_total > 21) {
+                // Player wins.
+                // Pop up a notification.
+            } else if (highest_dealer_total <= 17) {
+                if (highest_player_total > highest_dealer_total) {
+                    dealerHits();
+                } else if (highest_player_total < highest_dealer_total) {
+                    // Player loses
+                } else if (highest_player_total > highest_dealer_total) {
+                    // Player wins
+                }
+
+            } else if (dealer_top_total_value > 17) {
+                if (highest_player_total < highest_dealer_total) {
+                    // Player Loses
+                } else {
+                    // Player wins
+                }
+            }
+        }
+    }
+
+    private class DelayDealerHit extends AsyncTask<Void, Void, Void[]> {
+        @Override
+        protected void onPreExecute() {
+            Log.d(TAG, "In Dealerhit");
+        }
+
+        @Override
+        protected Void[] doInBackground(Void... params) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return params;
+        }
+
+        @Override
+        protected void onPostExecute(Void... params) {
+            int highest_dealer_total;
+            // Grab a new card.
+            dealer_left_card = dealer_right_card;
+            dealer_right_card = curDeck.getCard(generateRandomCard());
+
+            // Dealer drew an ace
+            if (dealer_right_card.getCardValue() == 1) {
+                // Dealer had an ace before, need to deal with both values
+                if (dealer_had_ace) {
+                    // Grab the card totals
+                    dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
+                    dealer_bot_total_value = dealer_bot_total_value + dealer_right_card.getCardValue();
+
+                    // Grab the player's highest total
+                    highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
+                            ? dealer_top_total_value
+                            : dealer_bot_total_value;
+
+                    // Check if dealer has higher total than player
+                    // The Ace being 11 will cause the dealer to bust.
+                    if (dealer_bot_total_value > 21
+                            && dealer_top_total_value < 21) {
+                        // Hide the dealer's bot total
+                        dealer_bot_total_value = 0;
+                    } else if (dealer_top_total_value > 21) {
+                        // Dealer Busts, player wins
+                        // Display Notification
+                    }
+                }
+                // Dealer just drew his first ace
+                else {
+                    dealer_had_ace = true;
+                    dealer_bot_total_value = dealer_top_total_value + 11;
+
+                    if (dealer_bot_total_value > 21) {
+                        dealer_bot_total_value = 0;
+                    }
+
+                    dealer_top_total_value += 1;
+                    if (dealer_top_total_value > 21) {
+                        // Dealer Busted
+                        // Player Wins
+                    }
+                }
+            }
+            // Dealer has never drawn an ace
+            // Check if the dealer busted
+            else {
+                dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
+
+                if (dealer_top_total_value > 21) {
+                    // Dealer Busted
+                    // Player Wins
+                }
+            }
+
+            updateView();
         }
     }
 }

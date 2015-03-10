@@ -41,10 +41,12 @@ public class PlayBlackJackGameFragment extends Fragment {
 
     private boolean dealer_had_ace;
     private boolean player_had_ace;
+    private boolean dealers_turn;
 
     private Button button_hit;
     private Button button_stand;
 
+    private View v;
     private Context context = null;
 
     @Override
@@ -54,10 +56,11 @@ public class PlayBlackJackGameFragment extends Fragment {
         context = this.getActivity();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_play_black_jack_game, container, false);
+        v = inflater.inflate(R.layout.fragment_play_black_jack_game, container, false);
         // If activity recreated (such as from screen rotate), restore
         // the previous article selection set by onSaveInstanceState().
         // This is primarily necessary when in the two-pane layout.
@@ -68,6 +71,18 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_right_card = curDeck.getCard(generateRandomCard());
             player_left_card = curDeck.getCard(generateRandomCard());
             player_right_card = curDeck.getCard(generateRandomCard());
+
+            dealer_right_slot.setImageDrawable(getResources()
+                    .getDrawable(dealer_right_card.getCardDrawable()));
+            dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
+
+            player_left_slot.setImageDrawable(getResources()
+                    .getDrawable(player_left_card.getCardDrawable()));
+            player_left_slot.setContentDescription(player_left_card.getCardDescription());
+
+            player_right_slot.setImageDrawable(getResources()
+                    .getDrawable(player_right_card.getCardDrawable()));
+            player_right_slot.setContentDescription(player_right_card.getCardDescription());
 
             // Grab initial total(s) for player
             // Left card IS an Ace, right card is NOT an Ace
@@ -114,11 +129,13 @@ public class PlayBlackJackGameFragment extends Fragment {
             button_hit.findViewById(R.id.button_hit);
             button_stand.findViewById(R.id.button_stand);
 
-
         } else {
+
+            // save the values and states
 
         }
 
+        updateView();
         // Inflate the layout for this fragment
         return v;
     }
@@ -150,10 +167,8 @@ public class PlayBlackJackGameFragment extends Fragment {
 
             // The Ace being 11 will cause the player to bust.
             if (player_bot_total_value > 21) {
-                player_bot_total_value = 0;
-
                 // Hide the player's bot total
-                player_bot_total_slot.setVisibility(View.INVISIBLE);
+                player_bot_total_value = 0;
             } else if (player_top_total_value > 21) {
                 // Player loses.
                 // Pop up a notification.
@@ -216,6 +231,8 @@ public class PlayBlackJackGameFragment extends Fragment {
                 }
             }
         }
+
+        updateView();
     }
 
 
@@ -227,7 +244,9 @@ public class PlayBlackJackGameFragment extends Fragment {
     public void dealerSetup() {
         int final_player_total;
 
-        threadDelay();
+        dealers_turn = true;
+
+        // Implement Delay
 
         // Grab the player's highest total
         final_player_total = (player_top_total_value > player_bot_total_value)
@@ -297,14 +316,14 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_had_ace = false;
         }
 
-
+        updateView();
     }
 
 
     public void dealerHits() {
         int highest_dealer_total;
 
-        threadDelay();
+        // Implement delay
 
 
         // Grab a new card.
@@ -328,11 +347,8 @@ public class PlayBlackJackGameFragment extends Fragment {
                 // The Ace being 11 will cause the dealer to bust.
                 if (dealer_bot_total_value > 21
                         && dealer_top_total_value < 21) {
-
-                    dealer_bot_total_value = 0;
-
                     // Hide the dealer's bot total
-                    dealer_bot_total_slot.setVisibility(View.INVISIBLE);
+                    dealer_bot_total_value = 0;
                 } else if (dealer_top_total_value > 21) {
                     // Dealer Busts, player wins
                     // Display Notification
@@ -345,7 +361,6 @@ public class PlayBlackJackGameFragment extends Fragment {
 
                 if (dealer_bot_total_value > 21) {
                     dealer_bot_total_value = 0;
-                    dealer_bot_total_slot.setVisibility(View.INVISIBLE);
                 }
 
                 dealer_top_total_value += 1;
@@ -357,8 +372,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         }
         // Dealer has never drawn an ace
         // Check if the dealer busted
-        else
-        {
+        else {
             dealer_top_total_value = dealer_top_total_value + dealer_right_card.getCardValue();
 
             if (dealer_top_total_value > 21) {
@@ -367,15 +381,15 @@ public class PlayBlackJackGameFragment extends Fragment {
             }
         }
 
+        updateView();
+
         checkWinner();
 
     }
 
-    public void checkWinner()
-    {
+    public void checkWinner() {
         int highest_dealer_total;
         int highest_player_total;
-
 
         // Grab the player's highest total
         highest_player_total = (player_top_total_value > player_bot_total_value)
@@ -420,6 +434,47 @@ public class PlayBlackJackGameFragment extends Fragment {
                 }
             }
         }).start();
+    }
+
+
+    public void updateView() {
+        dealer_top_total_slot.setImageDrawable(getResources()
+                .getDrawable(dealer_top_total_value));
+
+        player_top_total_slot.setImageDrawable(getResources()
+                .getDrawable(player_top_total_value));
+
+        if (player_bot_total_value > 0) {
+            player_bot_total_slot.setImageDrawable(getResources()
+                    .getDrawable(player_bot_total_value));
+        } else {
+            player_bot_total_slot.setVisibility(v.INVISIBLE);
+        }
+
+        if (dealer_bot_total_value > 0) {
+            dealer_bot_total_slot.setImageDrawable(getResources()
+                    .getDrawable(dealer_bot_total_value));
+        } else {
+            dealer_bot_total_slot.setVisibility(v.INVISIBLE);
+        }
+
+        if (dealers_turn) {
+            dealer_left_slot.setImageDrawable(getResources()
+                    .getDrawable(dealer_left_card.getCardDrawable()));
+            dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
+        }
+
+        dealer_right_slot.setImageDrawable(getResources()
+                .getDrawable(dealer_right_card.getCardDrawable()));
+        dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
+
+        player_left_slot.setImageDrawable(getResources()
+                .getDrawable(player_left_card.getCardDrawable()));
+        player_left_slot.setContentDescription(player_left_card.getCardDescription());
+
+        player_right_slot.setImageDrawable(getResources()
+                .getDrawable(player_right_card.getCardDrawable()));
+        player_right_slot.setContentDescription(player_right_card.getCardDescription());
     }
 
 
@@ -472,8 +527,8 @@ public class PlayBlackJackGameFragment extends Fragment {
         return RandomCard;
     }
 
-    public int giveTotalDrawable(int total){
-        switch (total){
+    public int giveTotalDrawable(int total) {
+        switch (total) {
             case 1:
                 return R.drawable.total_1;
             case 2:

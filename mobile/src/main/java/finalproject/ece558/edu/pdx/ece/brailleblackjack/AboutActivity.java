@@ -12,6 +12,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.transition.Explode;
@@ -309,5 +311,29 @@ public class AboutActivity extends Activity  implements
                 }
             }
         });
+    }
+
+    public void notification(String eventTitle, String eventContent){
+        int notificationId = 001;
+        // Build intent for notification content
+        //Intent viewIntent = new Intent();
+        //viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
+        //PendingIntent viewPendingIntent =
+        //        PendingIntent.getActivity(this, 0, viewIntent, 0);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setVibrate(new long[]{0, 200})
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(eventTitle)
+                        .setContentText(eventContent);
+        //.setContentIntent(viewPendingIntent);
+
+        // Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+
+        // Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
 }

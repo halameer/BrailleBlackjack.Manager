@@ -352,7 +352,12 @@ public class PlayBlackJackGameFragment extends Fragment {
             dealer_bot_total_value = 0;
             dealer_had_ace = false;
         }
+
+
+        checkWinner();
+
         updateView();
+
     }
 
 
@@ -418,8 +423,6 @@ public class PlayBlackJackGameFragment extends Fragment {
         }
 
         updateView();
-
-        checkWinner();
 
     }
 

@@ -93,17 +93,17 @@ public class PlayBlackJackGameFragment extends Fragment {
             player_left_card = curDeck.getCard(generateRandomCard());
             player_right_card = curDeck.getCard(generateRandomCard());
 
-            dealer_right_slot.setImageDrawable(getResources()
-                    .getDrawable(dealer_right_card.getCardDrawable()));
-            dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
+            //dealer_right_slot.setImageDrawable(getResources()
+            //        .getDrawable(dealer_right_card.getCardDrawable()));
+            //dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
 
-            player_left_slot.setImageDrawable(getResources()
-                    .getDrawable(player_left_card.getCardDrawable()));
-            player_left_slot.setContentDescription(player_left_card.getCardDescription());
+            //player_left_slot.setImageDrawable(getResources()
+            //        .getDrawable(player_left_card.getCardDrawable()));
+            //player_left_slot.setContentDescription(player_left_card.getCardDescription());
 
-            player_right_slot.setImageDrawable(getResources()
-                    .getDrawable(player_right_card.getCardDrawable()));
-            player_right_slot.setContentDescription(player_right_card.getCardDescription());
+            //player_right_slot.setImageDrawable(getResources()
+            //        .getDrawable(player_right_card.getCardDrawable()));
+            //player_right_slot.setContentDescription(player_right_card.getCardDescription());
 
             // Grab initial total(s) for player
             // Left card IS an Ace, right card is NOT an Ace
@@ -193,6 +193,7 @@ public class PlayBlackJackGameFragment extends Fragment {
     } */
 
     public void playerHits() {
+        Log.d(TAG, "In playerHits");
         // Grab a new card.
         player_left_card = player_right_card;
         player_right_card = curDeck.getCard(generateRandomCard());
@@ -278,6 +279,7 @@ public class PlayBlackJackGameFragment extends Fragment {
 
 
     public void dealerSetup() {
+        Log.d(TAG, "In dealerSetup");
         int final_player_total;
 
         dealers_turn = true;
@@ -404,10 +406,12 @@ public class PlayBlackJackGameFragment extends Fragment {
             // Is it the first time for the dealer?
             //  if yes then only reveal the hidden (left card)
             if(first_time_dealer){
+                Log.d(TAG, "First time Dealer");
                 first_time_dealer = false;
                 dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
                 new LeftDealerAnimation().execute(dealer_left_card.getCardDrawable());
             } else{
+                Log.d(TAG, "Not Dealers First Time");
                 dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
                 dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
                 new AnimateDealerCards().execute(dealer_left_card.getCardDrawable(),
@@ -416,12 +420,14 @@ public class PlayBlackJackGameFragment extends Fragment {
         } else{
             // Check if this is the first deal/turn or if its just a player "hit"
             if(player_turn){
+                Log.d(TAG, "Player Turn True");
                 player_left_slot.setContentDescription(player_left_card.getCardDescription());
                 player_right_slot.setContentDescription(player_right_card.getCardDescription());
                 new AnimatePlayerCards().execute(player_left_card.getCardDrawable(),
                         player_right_card.getCardDrawable());
             } else{
                 //This is the first deal/turn
+                Log.d(TAG, "Player Turn False");
                 dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
                 player_left_slot.setContentDescription(player_left_card.getCardDescription());
                 player_right_slot.setContentDescription(player_right_card.getCardDescription());
@@ -435,6 +441,7 @@ public class PlayBlackJackGameFragment extends Fragment {
     private class FirstDealAnimation extends AsyncTask<Integer, Void, Integer[]> {
         @Override
         protected void onPreExecute() {
+            Log.d(TAG, "FirstDealAnimation");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_right_slot, player_left_slot, player_right_slot);
         }
@@ -464,6 +471,7 @@ public class PlayBlackJackGameFragment extends Fragment {
     private class LeftDealerAnimation extends AsyncTask<Integer, Void, Integer[]> {
         @Override
         protected void onPreExecute() {
+            Log.d(TAG, "LeftDealerAnimation");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot);
         }
@@ -490,6 +498,7 @@ public class PlayBlackJackGameFragment extends Fragment {
     private class AnimateDealerCards extends AsyncTask<Integer, Void, Integer[]> {
         @Override
         protected void onPreExecute() {
+            Log.d(TAG, "AnimateDealerCards");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot, dealer_right_slot);
         }
@@ -518,6 +527,7 @@ public class PlayBlackJackGameFragment extends Fragment {
     private class AnimatePlayerCards extends AsyncTask<Integer, Void, Integer[]> {
         @Override
         protected void onPreExecute() {
+            Log.d(TAG, "AnimatePlayerCards");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(player_left_slot, player_right_slot);
         }
@@ -538,7 +548,7 @@ public class PlayBlackJackGameFragment extends Fragment {
             player_right_slot.setImageResource(params[1]);
 
             TransitionManager.beginDelayedTransition(group, new Explode());
-            toggleVisibility(dealer_left_slot, dealer_right_slot, player_left_slot, player_right_slot);
+            toggleVisibility(player_left_slot, player_right_slot);
             //mButton.setEnabled(true);
         }
     }

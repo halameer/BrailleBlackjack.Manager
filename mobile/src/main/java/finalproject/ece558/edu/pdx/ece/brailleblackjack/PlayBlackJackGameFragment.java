@@ -74,10 +74,10 @@ public class PlayBlackJackGameFragment extends Fragment implements
     private boolean player_had_ace;
     private boolean dealer_turn;
     private boolean player_turn;
-    private boolean first_time_dealer = false;
+    private boolean first_time_dealer;
 
-    private boolean button_hit_state = true;
-    private boolean button_stand_state = true;
+    private boolean button_hit_state;
+    private boolean button_stand_state;
 
     private ImageButton button_hit;
     private ImageButton button_stand;
@@ -105,6 +105,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 .addOnConnectionFailedListener(this)
                 .build();
         Log.d(TAG, "Connected to Google Api Client");
+
+        // Initialize state flags
+        first_time_dealer = false;
+        button_hit_state = true;
+        button_stand_state = true;
     }
 
 
@@ -115,25 +120,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Bind views
         group = (ViewGroup) v.findViewById(R.id.playFragment);
 
-        dealer_left_slot = (ImageView) v.findViewById(R.id.img_view_dealer_left_card);
-        dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
-        player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
-        player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
-
-        dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
-        dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
-        player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
-        player_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_player_bot_total);
-
-        // If activity recreated (such as from screen rotate), restore
-        // the previous article selection set by onSaveInstanceState().
-        // This is primarily necessary when in the two-pane layout.
-        if (savedInstanceState != null) {
-        } else {
-            // Start Android Wear App if its connected
-            sendMessage(START_WEAR);
-            gameSetup();
-        }
 
         /* Hit button Listener */
         button_hit = (ImageButton) v.findViewById(R.id.button_hit);
@@ -166,6 +152,26 @@ public class PlayBlackJackGameFragment extends Fragment implements
             }
         });
 
+        dealer_left_slot = (ImageView) v.findViewById(R.id.img_view_dealer_left_card);
+        dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
+        player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
+        player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
+
+        dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
+        dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
+        player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
+        player_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_player_bot_total);
+
+        // If activity recreated (such as from screen rotate), restore
+        // the previous article selection set by onSaveInstanceState().
+        // This is primarily necessary when in the two-pane layout.
+        if (savedInstanceState != null) {
+        } else {
+            // Start Android Wear App if its connected
+            sendMessage(START_WEAR);
+            gameSetup();
+        }
+
         // Inflate the layout for this fragment
         return v;
     }
@@ -174,13 +180,15 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
 
     public void gameSetup() {
-
         // Grab the single dealer card on the right and the two player cards
         curDeck = new Deck(context);
         dealer_right_card = curDeck.getCard(generateRandomCard());
         player_left_card = curDeck.getCard(generateRandomCard());
         player_right_card = curDeck.getCard(generateRandomCard());
         Log.d(TAG, "(gameSetup) Dealer drew " + dealer_right_card.getCardValue());
+        Log.d(TAG, "(gameSetup) Player old  " + player_left_card.getCardValue());
+        Log.d(TAG, "(gameSetup) Player drew  " + player_right_card.getCardValue());
+
 
 
         if (dealer_right_card.getCardValue() == 1)
@@ -194,8 +202,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             dealer_bot_total_value = 0;
         }
 
-        Log.d(TAG, "(gameSetup) Top Total " + dealer_top_total_value);
-        Log.d(TAG, "(gameSetup) Bot Total " + dealer_bot_total_value);
+        Log.d(TAG, "(gameSetup) Dealer Top Total " + dealer_top_total_value);
+        Log.d(TAG, "(gameSetup) Dealer Bot Total " + dealer_bot_total_value);
 
 
         // Grab initial total(s) for player
@@ -204,10 +212,21 @@ public class PlayBlackJackGameFragment extends Fragment implements
             // Player got Black Jack
             if (player_right_card.getCardValue() == 10) {
                 player_top_total_value = 21;
-                updateView();
-                player_turn = true;
-                playerStands();
-                return;
+                player_bot_total_value = 0;
+
+                if (dealer_right_card.getCardValue() != 1) {
+                    Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
+                    // Player hit a black jack and dealer first card isn't an ace
+                    finishedDialog(getResources().getString(R.string.player_black_jack),
+                            getResources().getString(R.string.player_wins) +
+                                    "\nPlayer had " + player_top_total_value);
+                }
+                else
+                // Player Hit black jack, but the dealer might hit one too
+                {
+                    Log.d(TAG, "(gameSetup) Player got Black Jack but dealer might get one too");
+                    dealerSetup();
+                }
             } else {
                 player_top_total_value = player_left_card.getCardValue()
                         + player_right_card.getCardValue();
@@ -218,16 +237,25 @@ public class PlayBlackJackGameFragment extends Fragment implements
         }
         // Left card is NOT an Ace, right card IS an Ace
         else if (player_right_card.getCardValue() == 1 && player_left_card.getCardValue() > 1) {
-            if (player_left_card.getCardValue() == 10) {
-                // End player's turn
-                // Check if Dealer got Black Jack
+            // Player got Black Jack
+            if (player_right_card.getCardValue() == 1) {
                 player_top_total_value = 21;
-                updateView();
-                player_turn = true;
-                playerStands();
-                return;
+                player_bot_total_value = 0;
 
-            } else {
+                if (dealer_right_card.getCardValue() != 1) {
+                    Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
+                    // Player hit a black jack and dealer first card isn't an ace
+                    finishedDialog(getResources().getString(R.string.player_black_jack),
+                            getResources().getString(R.string.player_wins) +
+                                    "\nPlayer had " + player_top_total_value);
+                }
+                else
+                // Player Hit black jack, but the dealer might hit one too
+                {
+                    Log.d(TAG, "(gameSetup) Player got Black Jack but dealer might get one too");
+                    dealerSetup();
+                }
+            }else {
                 player_top_total_value = player_left_card.getCardValue()
                         + player_right_card.getCardValue();
                 player_bot_total_value = player_left_card.getCardValue()
@@ -250,7 +278,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
         }
 
             /* UPDATE THE VIEWS */
-        updateView();
+            updateView();
+
+
+        Log.d(TAG, "(gameSetup) Player top total  " + player_top_total_value);
+        Log.d(TAG, "(gameSetup) Player bot total  " + player_bot_total_value);
+
         // Next update view should be a player turn
         player_turn = true;
 
@@ -343,6 +376,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
 
     public void playerStands() {
+        Log.d(TAG, "(playerStands) Player is done.");
         dealerSetup();
     }
 
@@ -407,10 +441,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
             // Dealer's first card was 10, second card is an Ace
             // Dealer got Black ShouldJack
             if (dealer_right_card.getCardValue() == 10) {
+                dealer_top_total_value = 21;
+                dealer_bot_total_value = 0;
                 if (final_player_total == 21) {
                     // Dealer and Player Push
                     finishedDialog(getResources().getString(R.string.player_pushed),
-                            "Dealer had " + dealer_top_total_value +
+                            "Dealer had " + dealer_bot_total_value +
                                     "\nPlayer had " + player_top_total_value);
                 } else {
                     // PLayer has < 21
@@ -536,7 +572,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
         @Override
         protected Integer[] doInBackground(Integer... params) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -838,7 +874,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                             "Dealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
                 } else if (highest_dealer_total == highest_player_total) {
-                    // Player wins
+                    // Player pushes
                     finishedDialog(getResources().getString(R.string.player_pushed),
                             "Dealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
@@ -1001,6 +1037,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     public void finishedDialog(String header, String body) {
 
+        Toast toast = Toast.makeText(context, "Checking results...\nDo you think you won?", Toast.LENGTH_LONG);
+        toast.show();
         new DelayDialog().execute(header, body);
 
 
@@ -1017,7 +1055,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
         @Override
         protected String[] doInBackground(String... params) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

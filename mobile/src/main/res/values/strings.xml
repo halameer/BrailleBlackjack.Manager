@@ -23,8 +23,10 @@
         <string name="player_wins">YOU WIN!</string>
         <string name="player_loses">YOU LOST!</string>
         <string name="player_pushed">PLAYER AND DEALER PUSHED!</string>
+        <string name="player_black_jack">BLACK JACK!</string>
         <string name="player_busted">YOU BUSTED!</string>
         <string name="dealer_busted">DEALER BUSTED!</string>
+
 
         <string name="lets_play">Lets Play Black Jack!</string>
         <string name="dealer_totals">Dealer Totals</string>

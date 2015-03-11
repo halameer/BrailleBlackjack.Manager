@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="finalproject.ece558.edu.pdx.ece.brailleblackjack.PlayBlackJackStartFragment">
@@ -7,8 +7,93 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lets Play Black Jack!"
+        android:text="@string/lets_play"
         android:id="@+id/lpBlackJack"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
-</FrameLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_left_card"
+        android:src="@drawable/placeholder"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"  />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_right_card"
+        android:src="@drawable/heart_ace"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_left_card"
+        android:src="@drawable/spades_ace"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"  />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_right_card"
+        android:src="@drawable/placeholder"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_top_total"
+        android:src="@drawable/total_1"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_dealer_bot_total"
+        android:src="@drawable/total_11"
+        android:layout_below="@+id/img_view_dealer_top_total"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_top_total"
+        android:src="@drawable/total_1"
+        android:layout_above="@+id/img_view_player_bot_total"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view_player_bot_total"
+        android:src="@drawable/total_11"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/dealer_totals"
+        android:contentDescription="@string/player_totals"
+        android:id="@+id/dealerView"
+        android:layout_below="@+id/img_view_dealer_bot_total"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/player_totals"
+        android:contentDescription="@string/player_totals"
+        android:id="@+id/playerView"
+        android:layout_above="@+id/img_view_player_left_card"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

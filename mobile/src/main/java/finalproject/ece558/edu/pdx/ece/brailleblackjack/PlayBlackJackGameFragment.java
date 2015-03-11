@@ -1,14 +1,10 @@
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,14 +17,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
+
+import java.util.List;
 import java.util.Random;
 
-public class PlayBlackJackGameFragment extends Fragment {
+public class PlayBlackJackGameFragment extends Fragment implements
+        MessageApi.MessageListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
 
     private static final String TAG = "PlayBlackJackFragment";
+    private GoogleApiClient mGoogleApiClient;
+
+    /* Declare a Deck object to access the Deck database
+    *   and declare 4 card objects representing the 4 cards
+    *   on the screen.
+    */
     private Deck curDeck;
+    private Card dealer_left_card;
+    private Card dealer_right_card;
+    private Card player_left_card;
+    private Card player_right_card;
 
     private ViewGroup group;
 
@@ -47,10 +69,6 @@ public class PlayBlackJackGameFragment extends Fragment {
     private int player_top_total_value;
     private int player_bot_total_value;
 
-    private Card dealer_left_card;
-    private Card dealer_right_card;
-    private Card player_left_card;
-    private Card player_right_card;
 
     private boolean dealer_had_ace;
     private boolean player_had_ace;
@@ -61,12 +79,16 @@ public class PlayBlackJackGameFragment extends Fragment {
     private boolean button_hit_state = true;
     private boolean button_stand_state = true;
 
-    private Button button_hit;
-    private Button button_stand;
+    private ImageButton button_hit;
+    private ImageButton button_stand;
     private Button button_start_over;
 
     private View v;
     private Context context = null;
+
+    private final String START_WEAR = "#START";
+    private final String PLAYER_WINS = "#WIN";
+    private final String PLAYER_LOSES = "#LOSE";
 
     // Saved States
 
@@ -75,6 +97,14 @@ public class PlayBlackJackGameFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         context = this.getActivity();
+
+        Log.d(TAG, "Attempting to connect to Google Api Client");
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        Log.d(TAG, "Connected to Google Api Client");
     }
 
 
@@ -90,7 +120,6 @@ public class PlayBlackJackGameFragment extends Fragment {
         player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
         player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
 
-
         dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
         dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
         player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
@@ -101,11 +130,13 @@ public class PlayBlackJackGameFragment extends Fragment {
         // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
         } else {
+            // Start Android Wear App if its connected
+            sendMessage(START_WEAR);
             gameSetup();
         }
 
         /* Hit button Listener */
-        button_hit = (Button) v.findViewById(R.id.button_hit);
+        button_hit = (ImageButton) v.findViewById(R.id.button_hit);
         button_hit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +145,7 @@ public class PlayBlackJackGameFragment extends Fragment {
         });
 
         /* Stand button Listener */
-        button_stand = (Button) v.findViewById(R.id.button_stand);
+        button_stand = (ImageButton) v.findViewById(R.id.button_stand);
         button_stand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +183,6 @@ public class PlayBlackJackGameFragment extends Fragment {
         Log.d(TAG, "(gameSetup) Dealer drew " + dealer_right_card.getCardValue());
 
 
-
         if (dealer_right_card.getCardValue() == 1)
         {
             dealer_top_total_value =  dealer_right_card.getCardValue();
@@ -167,24 +197,17 @@ public class PlayBlackJackGameFragment extends Fragment {
         Log.d(TAG, "(gameSetup) Top Total " + dealer_top_total_value);
         Log.d(TAG, "(gameSetup) Bot Total " + dealer_bot_total_value);
 
-        //dealer_right_slot.setImageDrawable(getResources()
-        //        .getDrawable(dealer_right_card.getCardDrawable()));
-        //dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
-
-        //player_left_slot.setImageDrawable(getResources()
-        //        .getDrawable(player_left_card.getCardDrawable()));
-        //player_left_slot.setContentDescription(player_left_card.getCardDescription());
-
-        //player_right_slot.setImageDrawable(getResources()
-        //        .getDrawable(player_right_card.getCardDrawable()));
-        //player_right_slot.setContentDescription(player_right_card.getCardDescription());
 
         // Grab initial total(s) for player
         // Left card IS an Ace, right card is NOT an Ace
         if (player_left_card.getCardValue() == 1 && player_right_card.getCardValue() > 1) {
             // Player got Black Jack
             if (player_right_card.getCardValue() == 10) {
-                checkWinner();
+                player_top_total_value = 21;
+                updateView();
+                player_turn = true;
+                playerStands();
+                return;
             } else {
                 player_top_total_value = player_left_card.getCardValue()
                         + player_right_card.getCardValue();
@@ -198,6 +221,12 @@ public class PlayBlackJackGameFragment extends Fragment {
             if (player_left_card.getCardValue() == 10) {
                 // End player's turn
                 // Check if Dealer got Black Jack
+                player_top_total_value = 21;
+                updateView();
+                player_turn = true;
+                playerStands();
+                return;
+
             } else {
                 player_top_total_value = player_left_card.getCardValue()
                         + player_right_card.getCardValue();
@@ -624,10 +653,6 @@ public class PlayBlackJackGameFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
 
     @Override
@@ -1007,6 +1032,18 @@ public class PlayBlackJackGameFragment extends Fragment {
             button_hit.setEnabled(button_hit_state);
             button_stand.setEnabled(button_stand_state);
 
+            String compare = getResources().getString(R.string.player_wins);
+            String condition = params[0];
+            Log.d(TAG, "Condition: " + condition + " Compare: " + compare);
+            //Send result to Android Wear Smart Watch
+            if(condition == compare){
+                Log.d(TAG, "Win");
+                sendMessage(PLAYER_WINS);
+            } else if(params[0].equals(getResources().getString(R.string.player_loses))){
+                sendMessage(PLAYER_LOSES);
+            } else{
+                //Both player and dealer push, send nothing
+            }
 
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -1038,9 +1075,110 @@ public class PlayBlackJackGameFragment extends Fragment {
         }
     }
 
+    /**
+     * Connect to the Google Api Client
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "Connected to Google Api Service");
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "Connected to Google Api Service");
+        }
+        Wearable.MessageApi.addListener(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+        super.onStop();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "onConnectionSuspended");
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed");
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+    }
+
+    /**
+     * Listener method to receive a Message to a possibly connected Android Wear device using
+     * the Wearable Data Layer API, which is part of Google Play service. This application
+     * specifically uses the MessageApi.
+     *
+     * @param messageEvent
+     */
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        //super.onMessageReceived(messageEvent);
+        Log.d(TAG, "In onMessageReceived");
+        if("#MESSAGE".equals(messageEvent.getPath())) {
+            // launch some Activity or do anything you like
+            CharSequence text = "Wear Sent a Message! Hit was Pressed!!! :)";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }  else if("#HIT".equals(messageEvent.getPath())){
+            getActivity().runOnUiThread(new Runnable(){
+                public void run() {
+                    button_hit.performClick();
+                }
+            });
+        } else if("#STAND".equals(messageEvent.getPath())){
+            getActivity().runOnUiThread(new Runnable(){
+                public void run() {
+                    button_stand.performClick();
+                }
+            });
+        }
+    }
+
+    /**
+     * Method to send a Message to a possibly connected Android Wear device using
+     * the Wearable Data Layer API, which is part of Google Play service. This application
+     * specifically uses the MessageApi.
+     *
+     * @param message A string consisting of the message to the Android Wear Device
+     */
+    public void sendMessage(String message){
+        final String msg = message;
+        if (mGoogleApiClient == null) {
+            Log.d(TAG, "Don't send anything, Api Client not initialized");
+            return;
+        }
+        /* Portion below goes through nodes (devices/watches) connected to this device
+        *   (The Phone) and if node(s) exist send the message to all
+        *   connected nodes
+        */
+        final PendingResult<NodeApi.GetConnectedNodesResult> nodes
+                = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+        nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+            @Override
+            public void onResult(NodeApi.GetConnectedNodesResult result) {
+                final List<Node> nodes = result.getNodes();
+                if (nodes != null) {
+                    Log.d(TAG, "Going to send message");
+                    for (int i = 0; i < nodes.size(); i++) {
+                        final Node node = nodes.get(i);
+
+                        // You can just send a message
+                        Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), msg, null);
+                    }
+                }
+            }
+        });
+    }
 
 }
-
-
-

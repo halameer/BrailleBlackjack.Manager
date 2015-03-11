@@ -6,25 +6,41 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Button
-        android:layout_width="100dp"
+    <ImageButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hit"
         android:id="@+id/button_hit"
-        android:src="@drawable/placeholder"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp"
+        android:src="@drawable/braille_hit_button" />
 
-    <Button
-        android:layout_width="100dp"
+    <ImageButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stand"
         android:id="@+id/button_stand"
-        android:src="@drawable/placeholder"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/braille_stand_button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_over"
+        android:id="@+id/button_start_over"
+        android:layout_above="@+id/button_hit"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hint"
+        android:id="@+id/button_hint"
+        android:layout_below="@+id/button_hit"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -32,8 +48,7 @@
         android:id="@+id/img_view_dealer_left_card"
         android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp" />
+        android:layout_alignParentStart="true"  />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -41,8 +56,7 @@
         android:id="@+id/img_view_dealer_right_card"
         android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dp" />
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -50,8 +64,7 @@
         android:id="@+id/img_view_player_left_card"
         android:src="@drawable/placeholder"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp" />
+        android:layout_alignParentStart="true"  />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -59,8 +72,7 @@
         android:id="@+id/img_view_player_right_card"
         android:src="@drawable/placeholder"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dp" />
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -93,14 +105,6 @@
         android:src="@drawable/total_1"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Over"
-        android:id="@+id/button_start_over"
-        android:layout_alignTop="@+id/button_hit"
-        android:layout_alignEnd="@+id/img_view_dealer_bot_total" />
 
 
 </RelativeLayout>

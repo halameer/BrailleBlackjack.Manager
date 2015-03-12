@@ -78,10 +78,13 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     private boolean button_hit_state;
     private boolean button_stand_state;
+    private boolean button_hint_state;
+    private boolean button_start_over_state;
 
     private ImageButton button_hit;
     private ImageButton button_stand;
     private Button button_start_over;
+    private Button button_hint;
 
     private View v;
     private Context context = null;
@@ -110,6 +113,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
         first_time_dealer = false;
         button_hit_state = true;
         button_stand_state = true;
+        button_hint_state = true;
+        button_start_over_state = true;
     }
 
 
@@ -149,6 +154,15 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 fm.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 //fm.addToBackStack(null);
                 fm.commit();
+            }
+        });
+
+        /* Hint button Listener */
+        button_hint = (Button) v.findViewById(R.id.button_hint);
+        button_hint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // Hint logic
             }
         });
 
@@ -216,10 +230,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
                 if (dealer_right_card.getCardValue() != 1) {
                     Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
+                    updateView();
                     // Player hit a black jack and dealer first card isn't an ace
                     finishedDialog(getResources().getString(R.string.player_black_jack),
                             getResources().getString(R.string.player_wins) +
                                     "\nPlayer had " + player_top_total_value);
+                    return;
                 }
                 else
                 // Player Hit black jack, but the dealer might hit one too
@@ -244,10 +260,14 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
                 if (dealer_right_card.getCardValue() != 1) {
                     Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
+                    updateView();
+
                     // Player hit a black jack and dealer first card isn't an ace
                     finishedDialog(getResources().getString(R.string.player_black_jack),
                             getResources().getString(R.string.player_wins) +
                                     "\nPlayer had " + player_top_total_value);
+
+                    return;
                 }
                 else
                 // Player Hit black jack, but the dealer might hit one too
@@ -307,9 +327,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 player_bot_total_value = 0;
             } else if (player_top_total_value > 21) {
                 // Player busted, player loses
+                player_bot_total_value = 0;
+                updateView();
                 finishedDialog(getResources().getString(R.string.player_loses),
                         getResources().getString(R.string.player_busted) +
                                 "\nPlayer had " + player_top_total_value);
+                return;
             }
         } else {
 
@@ -330,16 +353,18 @@ public class PlayBlackJackGameFragment extends Fragment implements
                             && (1 + player_top_total_value) <= 21) {
                         player_bot_total_value = 0;
                     }
-                    // Ace being 1 will cause the player to bust, show both totals for 1 and 11
+                    // Ace being 1 will cause the player to bust
                     // Player loses
                     else if ((11 + player_top_total_value) > 21
                             && (1 + player_top_total_value) > 21) {
-                        player_bot_total_value = player_top_total_value + 11;
+                        player_bot_total_value = 0;
 
                         // Player busted and lost
+                        updateView();
                         finishedDialog(getResources().getString(R.string.player_loses),
                                 getResources().getString(R.string.player_busted) +
                                         "\nPlayer had " + player_top_total_value);
+                        return;
 
                     }
                     // Player hit 21 not through a black jack, start the dealer turn to see if
@@ -364,9 +389,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 if (player_top_total_value > 21) {
                     // Player busted
                     // Player loses
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             getResources().getString(R.string.player_busted) +
                                     "\nPlayer had " + player_top_total_value);
+                    return;
                 }
             }
         }
@@ -414,14 +441,18 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 if (final_player_total == 21) {
                     // Dealer and Player Push
                     // Pop up notification
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_pushed),
                                     "Dealer had " + dealer_top_total_value +
                                     "\nPlayer had " + player_top_total_value);
+                    return;
                 } else {
                     // Dealer got 21 and player has < 21
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                                     "Dealer had " + dealer_top_total_value +
                                     "\nPlayer had " + player_top_total_value);
+                    return;
                 }
             }
             // Dealer didn't get a black jack
@@ -445,14 +476,18 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 dealer_bot_total_value = 0;
                 if (final_player_total == 21) {
                     // Dealer and Player Push
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_pushed),
                             "Dealer had " + dealer_bot_total_value +
                                     "\nPlayer had " + player_top_total_value);
+                    return;
                 } else {
                     // PLayer has < 21
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             "Dealer had " + dealer_top_total_value +
                                     "\nPlayer had " + player_top_total_value);
+                    return;
                 }
             }
             // Dealer didn't get a black jack
@@ -567,6 +602,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             Log.d(TAG, "FirstDealAnimation");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_right_slot, player_left_slot, player_right_slot);
+
+            changeAllButtonStates(false, false, false, false);
         }
 
         @Override
@@ -588,6 +625,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_right_slot, player_left_slot, player_right_slot);
             //mButton.setEnabled(true);
+
+            changeAllButtonStates(true, true, true, true);
         }
     }
 
@@ -597,6 +636,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             Log.d(TAG, "LeftDealerAnimation");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot);
+
+            changeAllButtonStates(false, false, false, false);
         }
 
         @Override
@@ -615,6 +656,9 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot);
             //mButton.setEnabled(true);
+
+
+            changeAllButtonStates(true, true, true, true);
         }
     }
 
@@ -624,6 +668,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             Log.d(TAG, "AnimateDealerCards");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot, dealer_right_slot);
+
+            changeAllButtonStates(false, false, false, false);
         }
 
         @Override
@@ -644,6 +690,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot, dealer_right_slot);
             //mButton.setEnabled(true);
+
+            changeAllButtonStates(false, false, true, true);
         }
     }
 
@@ -653,6 +701,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             Log.d(TAG, "AnimatePlayerCards");
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(player_left_slot, player_right_slot);
+
+            changeAllButtonStates(false, false, false, false);
         }
 
         @Override
@@ -673,6 +723,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(player_left_slot, player_right_slot);
             //mButton.setEnabled(true);
+
+            changeAllButtonStates(true, true, true, true);
         }
     }
 
@@ -817,7 +869,10 @@ public class PlayBlackJackGameFragment extends Fragment implements
     private class DelayCheckWinner extends AsyncTask<Void, Void, Void[]> {
         @Override
         protected void onPreExecute() {
+
             Log.d(TAG, "In CheckWinner");
+
+            changeAllButtonStates(false, false, false, false);
         }
 
         @Override
@@ -835,6 +890,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
             int highest_dealer_total;
             int highest_player_total;
 
+
             // Grab the player's highest total
             highest_player_total = (player_top_total_value > player_bot_total_value)
                     ? player_top_total_value
@@ -848,21 +904,27 @@ public class PlayBlackJackGameFragment extends Fragment implements
             if (highest_dealer_total > 21) {
                 // Dealer busted.
                 // Player wins.
+                updateView();
                 finishedDialog(getResources().getString(R.string.player_wins),
                         getResources().getString(R.string.dealer_busted));
+                return;
             } else if (highest_dealer_total <= 17) {
                 if (highest_player_total > highest_dealer_total && highest_dealer_total < 17) {
                     dealerHits();
                 } else if (highest_player_total < highest_dealer_total) {
                     // Player loses
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             "Dealer had " + highest_dealer_total +
                             "\nPlayer had " + highest_player_total);
+                    return;
                 } else if (highest_player_total > highest_dealer_total) {
                     // Player wins
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_wins),
                             "Dealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
+                    return;
                 } else if (highest_dealer_total >= 17 && highest_dealer_total <= 21) {
                     dealerHits();
                 }
@@ -870,28 +932,38 @@ public class PlayBlackJackGameFragment extends Fragment implements
             } else if (dealer_top_total_value > 17) {
                 if (highest_player_total < highest_dealer_total) {
                     // Player Loses
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             "Dealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
+                    return;
                 } else if (highest_dealer_total == highest_player_total) {
                     // Player pushes
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_pushed),
                             "Dealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
+                    return;
                 } else {
                     // Player wins
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_wins),
                             "Dealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
+                    return;
                 }
             }
+
+            changeAllButtonStates(false, false, true, true);
         }
     }
 
     private class DelayDealerHit extends AsyncTask<Void, Void, Void[]> {
         @Override
         protected void onPreExecute() {
+
             Log.d(TAG, "In Dealer Hit");
+            changeAllButtonStates(false, false, false, false);
         }
 
         @Override
@@ -945,10 +1017,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
                     if (dealer_top_total_value > 21 && dealer_bot_total_value > 21) {
                         // Dealer Busts, player wins
+                        updateView();
                         finishedDialog(getResources().getString(R.string.player_wins),
                                 getResources().getString(R.string.dealer_busted) +
                                         "\n\nDealer had " + highest_dealer_total +
                                         "\nPlayer had " + highest_player_total);
+                        return;
                     }
                 }
                 // Dealer just drew his first ace
@@ -970,10 +1044,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
                     if (dealer_top_total_value > 21) {
                         // Dealer Busts, player wins
+                        updateView();
                         finishedDialog(getResources().getString(R.string.player_wins),
                                 getResources().getString(R.string.dealer_busted) +
                                         "\n\nDealer had " + highest_dealer_total +
                                         "\nPlayer had " + highest_player_total);
+                        return;
                     }
                 }
             }
@@ -989,10 +1065,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
                 if (dealer_top_total_value > 21) {
                     // Dealer Busts, player wins
+                    updateView();
                     finishedDialog(getResources().getString(R.string.player_wins),
                             getResources().getString(R.string.dealer_busted) +
                                     "\n\nDealer had " + highest_dealer_total +
                                     "\nPlayer had " + highest_player_total);
+                    return;
                 }
                 else
                 {
@@ -1003,6 +1081,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             Log.d(TAG, "(DelayDealerHit) Top Total " + dealer_top_total_value);
             Log.d(TAG, "(DelayDealerHit) Bot Total " + dealer_bot_total_value);
             updateView();
+
+            changeAllButtonStates(false, false, true, true);
         }
     }
 
@@ -1036,12 +1116,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
 
     public void finishedDialog(String header, String body) {
-
-        Toast toast = Toast.makeText(context, "Checking results...\nDo you think you won?", Toast.LENGTH_LONG);
-        toast.show();
+        changeAllButtonStates(false, false, false, false);
         new DelayDialog().execute(header, body);
-
-
     }
 
 
@@ -1055,7 +1131,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
         @Override
         protected String[] doInBackground(String... params) {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -1064,12 +1140,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(String... params) {
-            button_hit_state = false;
-            button_stand_state = false;
-
-            button_hit.setEnabled(button_hit_state);
-            button_stand.setEnabled(button_stand_state);
-
             String compare = getResources().getString(R.string.player_wins);
             String condition = params[0];
             Log.d(TAG, "Condition: " + condition + " Compare: " + compare);
@@ -1110,6 +1180,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
             // show it
             alertDialog.show();
 
+            changeAllButtonStates(false, false, false, true);
         }
     }
 
@@ -1217,6 +1288,19 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 }
             }
         });
+    }
+
+    public void changeAllButtonStates(boolean hit_state, boolean stand_state, boolean hint_state, boolean start_over_state)
+    {
+        button_hit_state = hit_state;
+        button_stand_state = stand_state;
+        button_hint_state = hint_state;
+        button_start_over_state = start_over_state;
+
+        button_hit.setEnabled(button_hit_state);
+        button_stand.setEnabled(button_stand_state);
+        button_hint.setEnabled(button_hint_state);
+        button_start_over.setEnabled(button_start_over_state);
     }
 
 }

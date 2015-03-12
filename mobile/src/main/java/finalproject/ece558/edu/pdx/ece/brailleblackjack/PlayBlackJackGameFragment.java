@@ -240,6 +240,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
             button_hit_state = savedInstanceState.getBoolean("BUTTON_HIT_STATE");
             button_stand_state = savedInstanceState.getBoolean("BUTTON_STAND_STATE");
+            button_hint_state = savedInstanceState.getBoolean("BUTTON_HINT_STATE");
+
+            /* Set button Visibility */
+
+            changeAllButtonStates(button_hit_state, button_stand_state, button_hint_state, true);
 
             /* Restore Cards */
             curDeck = new Deck(context);
@@ -844,6 +849,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
         savedInstanceState.putBoolean("BUTTON_HIT_STATE", button_hit_state);
         savedInstanceState.putBoolean("BUTTON_STAND_STATE", button_stand_state);
+        savedInstanceState.putBoolean("BUTTON_HINT_STATE", button_hint_state);
 
         if(dealer_left_card != null) {
             savedInstanceState.putBoolean("DEALER_LEFT_EXISTS", true);
@@ -1239,7 +1245,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             String condition = params[0];
             Log.d(TAG, "Condition: " + condition + " Compare: " + compare);
             //Send result to Android Wear Smart Watch
-            if(condition == compare){
+            if(params[0].equals(getResources().getString(R.string.player_wins)) ||
+                    params[0].equals(getResources().getString(R.string.player_black_jack))){
                 Log.d(TAG, "Win");
                 sendMessage(PLAYER_WINS);
             } else if(params[0].equals(getResources().getString(R.string.player_loses))){

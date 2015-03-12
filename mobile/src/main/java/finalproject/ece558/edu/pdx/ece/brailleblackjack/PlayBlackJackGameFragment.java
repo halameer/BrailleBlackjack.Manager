@@ -1391,13 +1391,17 @@ public class PlayBlackJackGameFragment extends Fragment implements
         }  else if("#HIT".equals(messageEvent.getPath())){
             getActivity().runOnUiThread(new Runnable(){
                 public void run() {
-                    button_hit.performClick();
+                    if(button_hit_state){
+                        button_hit.performClick();
+                    }
                 }
             });
         } else if("#STAND".equals(messageEvent.getPath())){
             getActivity().runOnUiThread(new Runnable(){
                 public void run() {
-                    button_stand.performClick();
+                    if(button_stand_state){
+                        button_stand.performClick();
+                    }
                 }
             });
         }

@@ -375,13 +375,13 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Left card is NOT an Ace, right card IS an Ace
         else if (player_right_card.getCardValue() == 1 && player_left_card.getCardValue() > 1) {
             // Player got Black Jack
-            if (player_right_card.getCardValue() == 1) {
+            if (player_left_card.getCardValue() == 10) {
                 player_top_total_value = 21;
                 player_bot_total_value = 0;
 
                 blackJackToast();
 
-                if (dealer_right_card.getCardValue() == 10) {
+                if (dealer_right_card.getCardValue() > 1) {
                     Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
                     updateView();
 

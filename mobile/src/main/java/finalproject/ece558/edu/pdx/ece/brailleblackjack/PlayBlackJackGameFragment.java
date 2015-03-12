@@ -284,13 +284,15 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 player_top_total_value = 21;
                 player_bot_total_value = 0;
 
+                blackJackToast();
+
                 if (dealer_right_card.getCardValue() != 1) {
                     Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
                     updateView();
                     // Player hit a black jack and dealer first card isn't an ace
                     finishedDialog(getResources().getString(R.string.player_black_jack),
                             getResources().getString(R.string.player_wins) +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
                     return;
                 }
                 else
@@ -314,14 +316,16 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 player_top_total_value = 21;
                 player_bot_total_value = 0;
 
-                if (dealer_right_card.getCardValue() != 1) {
+                blackJackToast();
+
+                if (dealer_left_card.getCardValue() == 10) {
                     Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
                     updateView();
 
                     // Player hit a black jack and dealer first card isn't an ace
                     finishedDialog(getResources().getString(R.string.player_black_jack),
                             getResources().getString(R.string.player_wins) +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
 
                     return;
                 }
@@ -387,7 +391,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 updateView();
                 finishedDialog(getResources().getString(R.string.player_loses),
                         getResources().getString(R.string.player_busted) +
-                                "\nPlayer had " + player_top_total_value);
+                                "\nUser had " + player_top_total_value);
                 return;
             }
         } else {
@@ -419,7 +423,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                         updateView();
                         finishedDialog(getResources().getString(R.string.player_loses),
                                 getResources().getString(R.string.player_busted) +
-                                        "\nPlayer had " + player_top_total_value);
+                                        "\nUser had " + player_top_total_value);
                         return;
 
                     }
@@ -428,6 +432,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     else if ((1 + player_top_total_value) == 21
                             || (11 + player_top_total_value) == 21) {
                         // Player got 21 see if dealer can get 21
+                        blackJackToast();
                         dealerSetup();
                     }
                 }
@@ -435,6 +440,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 else {
                     if ((player_top_total_value) == 21) {
                         // Player got 21 see if dealer can get 21
+                        blackJackToast();
                         dealerSetup();
                     }
                 }
@@ -442,13 +448,19 @@ public class PlayBlackJackGameFragment extends Fragment implements
             // Player has not gotten an ace
             else {
 
+
                 if (player_top_total_value > 21) {
                     // Player busted
                     // Player loses
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             getResources().getString(R.string.player_busted) +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
+                    return;
+                }else if (player_top_total_value == 21) {
+                    // Player hit 21
+                    blackJackToast();
+                    playerStands();
                     return;
                 }
             }
@@ -497,17 +509,20 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 if (final_player_total == 21) {
                     // Dealer and Player Push
                     // Pop up notification
+                    blackJackToast();
+                    dealer_top_total_value = 21;
+                    dealer_bot_total_value = 0;
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_pushed),
                                     "Dealer had " + dealer_top_total_value +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
                     return;
                 } else {
                     // Dealer got 21 and player has < 21
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                                     "Dealer had " + dealer_top_total_value +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
                     return;
                 }
             }
@@ -535,14 +550,14 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_pushed),
                             "Dealer had " + dealer_bot_total_value +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
                     return;
                 } else {
                     // PLayer has < 21
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             "Dealer had " + dealer_top_total_value +
-                                    "\nPlayer had " + player_top_total_value);
+                                    "\nUser had " + player_top_total_value);
                     return;
                 }
             }
@@ -977,14 +992,14 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             "Dealer had " + highest_dealer_total +
-                            "\nPlayer had " + highest_player_total);
+                            "\nUser had " + highest_player_total);
                     return;
                 } else if (highest_player_total > highest_dealer_total) {
                     // Player wins
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_wins),
                             "Dealer had " + highest_dealer_total +
-                                    "\nPlayer had " + highest_player_total);
+                                    "\nUser had " + highest_player_total);
                     return;
                 } else if (highest_dealer_total >= 17 && highest_dealer_total <= 21) {
                     dealerHits();
@@ -996,21 +1011,21 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_loses),
                             "Dealer had " + highest_dealer_total +
-                                    "\nPlayer had " + highest_player_total);
+                                    "\nUser had " + highest_player_total);
                     return;
                 } else if (highest_dealer_total == highest_player_total) {
                     // Player pushes
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_pushed),
                             "Dealer had " + highest_dealer_total +
-                                    "\nPlayer had " + highest_player_total);
+                                    "\nUser had " + highest_player_total);
                     return;
                 } else {
                     // Player wins
                     updateView();
                     finishedDialog(getResources().getString(R.string.player_wins),
                             "Dealer had " + highest_dealer_total +
-                                    "\nPlayer had " + highest_player_total);
+                                    "\nUser had " + highest_player_total);
                     return;
                 }
             }
@@ -1082,7 +1097,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                         finishedDialog(getResources().getString(R.string.player_wins),
                                 getResources().getString(R.string.dealer_busted) +
                                         "\n\nDealer had " + highest_dealer_total +
-                                        "\nPlayer had " + highest_player_total);
+                                        "\nUser had " + highest_player_total);
                         return;
                     }
                 }
@@ -1109,7 +1124,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                         finishedDialog(getResources().getString(R.string.player_wins),
                                 getResources().getString(R.string.dealer_busted) +
                                         "\n\nDealer had " + highest_dealer_total +
-                                        "\nPlayer had " + highest_player_total);
+                                        "\nUser had " + highest_player_total);
                         return;
                     }
                 }
@@ -1130,7 +1145,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     finishedDialog(getResources().getString(R.string.player_wins),
                             getResources().getString(R.string.dealer_busted) +
                                     "\n\nDealer had " + highest_dealer_total +
-                                    "\nPlayer had " + highest_player_total);
+                                    "\nUser had " + highest_player_total);
                     return;
                 }
                 else
@@ -1349,6 +1364,15 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 }
             }
         });
+    }
+
+    public void blackJackToast()
+    {
+        CharSequence text = "You have 21!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     public void changeAllButtonStates(boolean hit_state, boolean stand_state, boolean hint_state, boolean start_over_state)

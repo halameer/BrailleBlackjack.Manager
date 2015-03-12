@@ -16,9 +16,9 @@
         <string name="action_next">Next</string>
         <string name="action_finish">Finished</string>
         <string name="start_over">Start Over</string>
-        <string name="give_up">I'm Done</string>
+        <string name="give_up">I\'m Done</string>
         <string name="try_again">Try Again</string>
-        <string name="hint">Hint</string>
+        <string name="hint">Reveal</string>
         <string name="okay">Okay</string>
 
         <string name="player_wins">YOU WIN!</string>
@@ -31,7 +31,7 @@
 
         <string name="lets_play">Lets Play Black Jack!</string>
         <string name="dealer_totals">Dealer Totals</string>
-        <string name="player_totals">Player Totals</string>
+        <string name="player_totals">Your Totals</string>
 
 
         <!-- Learning Braille Description -->
@@ -46,61 +46,61 @@
         <string name="reveal_total">Reveal Total</string>
 
         <!-- Card descriptions for Talk-Back -->
-        <string name="description_1_clubs">You drew Ace of Clubs</string>
-        <string name="description_2_clubs">You drew 2 of Clubs</string>
-        <string name="description_3_clubs">You drew 3 of Clubs</string>
-        <string name="description_4_clubs">You drew 4 of Clubs</string>
-        <string name="description_5_clubs">You drew 5 of Clubs</string>
-        <string name="description_6_clubs">You drew 6 of Clubs</string>
-        <string name="description_7_clubs">You drew 7 of Clubs</string>
-        <string name="description_8_clubs">You drew 8 of Clubs</string>
-        <string name="description_9_clubs">You drew 9 of Clubs</string>
-        <string name="description_10_clubs">You drew 10 of Clubs</string>
-        <string name="description_11_clubs">You drew Jack of Clubs</string>
-        <string name="description_12_clubs">You drew Queen of Clubs</string>
-        <string name="description_13_clubs">You drew King of Clubs</string>
+        <string name="description_1_clubs">Ace of Clubs</string>
+        <string name="description_2_clubs">2 of Clubs</string>
+        <string name="description_3_clubs">3 of Clubs</string>
+        <string name="description_4_clubs">4 of Clubs</string>
+        <string name="description_5_clubs">5 of Clubs</string>
+        <string name="description_6_clubs">6 of Clubs</string>
+        <string name="description_7_clubs">7 of Clubs</string>
+        <string name="description_8_clubs">8 of Clubs</string>
+        <string name="description_9_clubs">9 of Clubs</string>
+        <string name="description_10_clubs">10 of Clubs</string>
+        <string name="description_11_clubs">Jack of Clubs</string>
+        <string name="description_12_clubs">Queen of Clubs</string>
+        <string name="description_13_clubs">King of Clubs</string>
 
-        <string name="description_1_diamonds">You drew Ace of Diamonds</string>
-        <string name="description_2_diamonds">You drew 2 of Diamonds</string>
-        <string name="description_3_diamonds">You drew 3 of Diamonds</string>
-        <string name="description_4_diamonds">You drew 4 of Diamonds</string>
-        <string name="description_5_diamonds">You drew 5 of Diamonds</string>
-        <string name="description_6_diamonds">You drew 6 of Diamonds</string>
-        <string name="description_7_diamonds">You drew 7 of Diamonds</string>
-        <string name="description_8_diamonds">You drew 8 of Diamonds</string>
-        <string name="description_9_diamonds">You drew 9 of Diamonds</string>
-        <string name="description_10_diamonds">You drew 10 of Diamonds</string>
-        <string name="description_11_diamonds">You drew Jack of Diamonds</string>
-        <string name="description_12_diamonds">You drew Queen of Diamonds</string>
-        <string name="description_13_diamonds">You drew King of Diamonds</string>
+        <string name="description_1_diamonds">Ace of Diamonds</string>
+        <string name="description_2_diamonds">2 of Diamonds</string>
+        <string name="description_3_diamonds">3 of Diamonds</string>
+        <string name="description_4_diamonds">4 of Diamonds</string>
+        <string name="description_5_diamonds">5 of Diamonds</string>
+        <string name="description_6_diamonds">6 of Diamonds</string>
+        <string name="description_7_diamonds">7 of Diamonds</string>
+        <string name="description_8_diamonds">8 of Diamonds</string>
+        <string name="description_9_diamonds">9 of Diamonds</string>
+        <string name="description_10_diamonds">10 of Diamonds</string>
+        <string name="description_11_diamonds">Jack of Diamonds</string>
+        <string name="description_12_diamonds">Queen of Diamonds</string>
+        <string name="description_13_diamonds">King of Diamonds</string>
 
-        <string name="description_1_hearts">You drew Ace of Hearts</string>
-        <string name="description_2_hearts">You drew 2 of Hearts</string>
-        <string name="description_3_hearts">You drew 3 of Hearts</string>
-        <string name="description_4_hearts">You drew 4 of Hearts</string>
-        <string name="description_5_hearts">You drew 5 of Hearts</string>
-        <string name="description_6_hearts">You drew 6 of Hearts</string>
-        <string name="description_7_hearts">You drew 7 of Hearts</string>
-        <string name="description_8_hearts">You drew 8 of Hearts</string>
-        <string name="description_9_hearts">You drew 9 of Hearts</string>
-        <string name="description_10_hearts">You drew 10 of Hearts</string>
-        <string name="description_11_hearts">You drew Jack of Hearts</string>
-        <string name="description_12_hearts">You drew Queen of Hearts</string>
-        <string name="description_13_hearts">You drew King of Hearts</string>
+        <string name="description_1_hearts">Ace of Hearts</string>
+        <string name="description_2_hearts">2 of Hearts</string>
+        <string name="description_3_hearts">3 of Hearts</string>
+        <string name="description_4_hearts">4 of Hearts</string>
+        <string name="description_5_hearts">5 of Hearts</string>
+        <string name="description_6_hearts">6 of Hearts</string>
+        <string name="description_7_hearts">7 of Hearts</string>
+        <string name="description_8_hearts">8 of Hearts</string>
+        <string name="description_9_hearts">9 of Hearts</string>
+        <string name="description_10_hearts">10 of Hearts</string>
+        <string name="description_11_hearts">Jack of Hearts</string>
+        <string name="description_12_hearts">Queen of Hearts</string>
+        <string name="description_13_hearts">King of Hearts</string>
 
-        <string name="description_1_spades">You drew Ace of Spades</string>
-        <string name="description_2_spades">You drew 2 of Spades</string>
-        <string name="description_3_spades">You drew 3 of Spades</string>
-        <string name="description_4_spades">You drew 4 of Spades</string>
-        <string name="description_5_spades">You drew 5 of Spades</string>
-        <string name="description_6_spades">You drew 6 of Spades</string>
-        <string name="description_7_spades">You drew 7 of Spades</string>
-        <string name="description_8_spades">You drew 8 of Spades</string>
-        <string name="description_9_spades">You drew 9 of Spades</string>
-        <string name="description_10_spades">You drew 10 of Spades</string>
-        <string name="description_11_spades">You drew Jack of Spades</string>
-        <string name="description_12_spades">You drew Queen of Spades</string>
-        <string name="description_13_spades">You drew King of Spades</string>
+        <string name="description_1_spades">Ace of Spades</string>
+        <string name="description_2_spades">2 of Spades</string>
+        <string name="description_3_spades">3 of Spades</string>
+        <string name="description_4_spades">4 of Spades</string>
+        <string name="description_5_spades">5 of Spades</string>
+        <string name="description_6_spades">6 of Spades</string>
+        <string name="description_7_spades">7 of Spades</string>
+        <string name="description_8_spades">8 of Spades</string>
+        <string name="description_9_spades">9 of Spades</string>
+        <string name="description_10_spades">10 of Spades</string>
+        <string name="description_11_spades">Jack of Spades</string>
+        <string name="description_12_spades">Queen of Spades</string>
+        <string name="description_13_spades">King of Spades</string>
 
     </resources>
 

@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/dealer_totals"
-        android:contentDescription="@string/player_totals"
+        android:contentDescription="@string/dealer_totals"
         android:id="@+id/dealerView"
         android:layout_below="@+id/img_view_dealer_right_card"
         android:layout_centerHorizontal="true"

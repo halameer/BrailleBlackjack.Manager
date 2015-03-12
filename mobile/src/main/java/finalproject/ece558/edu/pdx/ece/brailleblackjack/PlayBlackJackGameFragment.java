@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.transition.Explode;
@@ -16,8 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class PlayBlackJackGameFragment extends Fragment implements
@@ -74,17 +77,22 @@ public class PlayBlackJackGameFragment extends Fragment implements
     private boolean player_had_ace;
     private boolean dealer_turn;
     private boolean player_turn;
-    private boolean first_time_dealer;
-
     private boolean button_hit_state;
     private boolean button_stand_state;
     private boolean button_hint_state;
     private boolean button_start_over_state;
+    private boolean first_draw_spoken;
 
     private Button button_hit;
     private Button button_stand;
     private Button button_start_over;
     private Button button_hint;
+
+    private TextToSpeech textToSpeech;
+
+    AccessibilityManager am;
+    boolean isAccessibilityEnabled;
+    boolean isExploreByTouchEnabled;
 
     private View v;
     private Context context = null;
@@ -93,13 +101,51 @@ public class PlayBlackJackGameFragment extends Fragment implements
     private final String PLAYER_WINS = "#WIN";
     private final String PLAYER_LOSES = "#LOSE";
 
-    // Saved States
+    FirstDealAnimation firstTask = null;
+    AnimateDealerCards animateDealerTask = null;
+    AnimatePlayerCards animatePlayerTask = null;
+    DelayDealerHit delayDealerTask = null;
+    DelayCheckWinner delayCheckTask = null;
+    DelayDialog delayDialogTask = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         context = this.getActivity();
+
+        /* Check if Accessibility is on to Speak upon certain events */
+        am = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        isAccessibilityEnabled = am.isEnabled();
+        isExploreByTouchEnabled = am.isTouchExplorationEnabled();
+
+        /* Set-up the TTS Api */
+        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener(){
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = textToSpeech.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("error", "Language chosen is not supported");
+                    } else {
+                        if(isAccessibilityEnabled) {
+                            if (!first_draw_spoken) {
+                                String speak = "You drew " + player_left_card.getCardDescription() +
+                                        " and " + player_right_card.getCardDescription() +
+                                        "\n  Dealer drew " + dealer_right_card.getCardDescription();
+
+                                convertTextToSpeech(speak);
+                                first_draw_spoken = true;
+                            }
+                        }
+                    }
+                } else {
+                    Log.e("error", "Initialization Failed!");
+                }
+            }
+        });
 
         Log.d(TAG, "Attempting to connect to Google Api Client");
         mGoogleApiClient = new GoogleApiClient.Builder(context)
@@ -110,11 +156,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
         Log.d(TAG, "Connected to Google Api Client");
 
         // Initialize state flags
-        first_time_dealer = false;
         button_hit_state = true;
         button_stand_state = true;
         button_hint_state = true;
         button_start_over_state = true;
+        first_draw_spoken = false;
     }
 
 
@@ -184,7 +230,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
             player_had_ace = savedInstanceState.getBoolean("PLAYER_HAD_ACE");
             dealer_turn = savedInstanceState.getBoolean("DEALER_TURN");
             player_turn = savedInstanceState.getBoolean("PLAYER_TURN");
-            first_time_dealer = savedInstanceState.getBoolean("FIRST_TIME_DEALER");
+
+            first_draw_spoken = savedInstanceState.getBoolean("IS_FIRST_DRAW_SPOKEN");
 
             dealer_top_total_value = savedInstanceState.getInt("DEALER_TOP_TOTAL_VALUE");
             dealer_bot_total_value = savedInstanceState.getInt("DEALER_BOT_TOTAL_VALUE");
@@ -198,12 +245,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
             curDeck = new Deck(context);
             String d_left, d_right, p_left, p_right;
             boolean dealer_left_exists = savedInstanceState.getBoolean("DEALER_LEFT_EXISTS");
-            if (dealer_left_exists) {
-                d_left = savedInstanceState.getString("DEALER_LEFT_CARD");
-                dealer_left_card = curDeck.getCard(d_left);
-                dealer_left_slot.setImageResource(dealer_left_card.getCardDrawable());
-                dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
-            }
+
             d_right = savedInstanceState.getString("DEALER_RIGHT_CARD");
             p_left = savedInstanceState.getString("PLAYER_LEFT_CARD");
             p_right = savedInstanceState.getString("PLAYER_RIGHT_CARD");
@@ -212,31 +254,49 @@ public class PlayBlackJackGameFragment extends Fragment implements
             player_left_card = curDeck.getCard(p_left);
             player_right_card = curDeck.getCard(p_right);
 
-            dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
-            player_left_slot.setContentDescription(player_left_card.getCardDescription());
-            player_right_slot.setContentDescription(player_right_card.getCardDescription());
+            /* Restore Views and Totals and Description for TalkBack */
+            dealer_left_slot.setContentDescription("Dealer left card is hidden until you stand");
+            dealer_right_slot.setContentDescription("Dealer right card is " + dealer_right_card.getCardDescription());
+            player_left_slot.setContentDescription("Your left card is " + player_left_card.getCardDescription());
+            player_right_slot.setContentDescription("Your right card is " + player_right_card.getCardDescription());
 
             dealer_right_slot.setImageResource(dealer_right_card.getCardDrawable());
             player_left_slot.setImageResource(player_left_card.getCardDrawable());
             player_right_slot.setImageResource(player_right_card.getCardDrawable());
 
-            /* Restore Views */
+            if (dealer_left_exists) {
+                d_left = savedInstanceState.getString("DEALER_LEFT_CARD");
+                dealer_left_card = curDeck.getCard(d_left);
+                dealer_left_slot.setImageResource(dealer_left_card.getCardDrawable());
+                dealer_left_slot.setContentDescription("Dealer left card is " + dealer_left_card.getCardDescription());
+            }
+
             dealer_top_total_slot.setImageResource(giveTotalDrawable(dealer_top_total_value));
+            dealer_top_total_slot.setContentDescription("Dealer has a total of" +
+                    String.valueOf(dealer_top_total_value));
 
             player_top_total_slot.setImageResource(giveTotalDrawable(player_top_total_value));
+            player_top_total_slot.setContentDescription("You have a total of " +
+                    String.valueOf(player_top_total_value));
 
             if (player_bot_total_value > 0) {
                 player_bot_total_slot.setImageResource(giveTotalDrawable(player_bot_total_value));
                 player_bot_total_slot.setVisibility(v.VISIBLE);
+                player_bot_total_slot.setContentDescription("Because of an ace you have an alternative total of" +
+                        String.valueOf(player_bot_total_value));
             } else {
                 player_bot_total_slot.setVisibility(v.INVISIBLE);
+                player_bot_total_slot.setContentDescription("");
             }
 
             if (dealer_bot_total_value > 0) {
                 dealer_bot_total_slot.setImageResource(giveTotalDrawable(dealer_bot_total_value));
                 dealer_bot_total_slot.setVisibility(v.VISIBLE);
+                dealer_top_total_slot.setContentDescription("Because of an ace dealer has an alternative total of" +
+                        String.valueOf(dealer_bot_total_value));
             } else {
                 dealer_bot_total_slot.setVisibility(v.INVISIBLE);
+                dealer_top_total_slot.setContentDescription("");
             }
         } else {
             // Start Android Wear App if its connected
@@ -258,8 +318,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
         Log.d(TAG, "(gameSetup) Dealer drew " + dealer_right_card.getCardValue());
         Log.d(TAG, "(gameSetup) Player old  " + player_left_card.getCardValue());
         Log.d(TAG, "(gameSetup) Player drew  " + player_right_card.getCardValue());
-
-
 
         if (dealer_right_card.getCardValue() == 1)
         {
@@ -375,6 +433,9 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Grab a new card.
         player_left_card = player_right_card;
         player_right_card = curDeck.getCard(generateRandomCard());
+        if(isAccessibilityEnabled) {
+            convertTextToSpeech("You drew " + player_right_card.getCardDescription());
+        }
 
         player_top_total_value += player_right_card.getCardValue();
 
@@ -490,6 +551,9 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Grab a new card.
         dealer_left_card = dealer_right_card;
         dealer_right_card = curDeck.getCard(generateRandomCard());
+        if(isAccessibilityEnabled) {
+            convertTextToSpeech("Dealer drew " + dealer_right_card.getCardDescription());
+        }
 
         // Grab the player's highest total
         final_player_total = (player_top_total_value > player_bot_total_value)
@@ -589,79 +653,65 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
 
     public void dealerHits() {
-        new DelayDealerHit().execute();
+        delayDealerTask = (DelayDealerHit) new DelayDealerHit().execute();
     }
 
     public void checkWinner() {
-        new DelayCheckWinner().execute();
+        delayCheckTask = (DelayCheckWinner) new DelayCheckWinner().execute();
     }
-
-    public void threadDelay() {
-        // Delay for 3 seconds
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
 
     public void updateView() {
         dealer_top_total_slot.setImageResource(giveTotalDrawable(dealer_top_total_value));
+        dealer_top_total_slot.setContentDescription("Dealer has a total of" +
+                String.valueOf(dealer_top_total_value));
 
         player_top_total_slot.setImageResource(giveTotalDrawable(player_top_total_value));
+        player_top_total_slot.setContentDescription("You have a total of" +
+                String.valueOf(player_top_total_value));
 
         if (player_bot_total_value > 0) {
             player_bot_total_slot.setImageResource(giveTotalDrawable(player_bot_total_value));
             player_bot_total_slot.setVisibility(v.VISIBLE);
+            player_bot_total_slot.setContentDescription("Because of an ace you have an alternative total of" +
+                    String.valueOf(player_bot_total_value));
         } else {
             player_bot_total_slot.setVisibility(v.INVISIBLE);
+            player_bot_total_slot.setContentDescription("");
         }
 
         if (dealer_bot_total_value > 0) {
             dealer_bot_total_slot.setImageResource(giveTotalDrawable(dealer_bot_total_value));
             dealer_bot_total_slot.setVisibility(v.VISIBLE);
+            dealer_top_total_slot.setContentDescription("Because of an ace dealer has an alternative total of" +
+                    String.valueOf(dealer_bot_total_value));
         } else {
             dealer_bot_total_slot.setVisibility(v.INVISIBLE);
+            dealer_top_total_slot.setContentDescription("");
         }
 
         if (dealer_turn) {
-            // Is it the first time for the dealer?
-            //  if yes then only reveal the hidden (left card)
-            if(first_time_dealer){
-                Log.d(TAG, "First time Dealer");
-                first_time_dealer = false;
-                dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
-                new LeftDealerAnimation().execute(dealer_left_card.getCardDrawable());
-
-            } else{
-                Log.d(TAG, "Not Dealers First Time");
-                dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
-                dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
-                new AnimateDealerCards().execute(dealer_left_card.getCardDrawable(),
-                        dealer_right_card.getCardDrawable());
-            }
+            Log.d(TAG, "Dealers Turn");
+            dealer_left_slot.setContentDescription("Dealer left card is " + dealer_left_card.getCardDescription());
+            dealer_right_slot.setContentDescription("Dealer right card is " + dealer_right_card.getCardDescription());
+            animateDealerTask = (AnimateDealerCards) new AnimateDealerCards().execute(dealer_left_card.getCardDrawable(),
+                    dealer_right_card.getCardDrawable());
         } else{
             // Check if this is the first deal/turn or if its just a player "hit"
             if(player_turn){
                 Log.d(TAG, "Player Turn True");
-                player_left_slot.setContentDescription(player_left_card.getCardDescription());
-                player_right_slot.setContentDescription(player_right_card.getCardDescription());
-                new AnimatePlayerCards().execute(player_left_card.getCardDrawable(),
+                player_left_slot.setContentDescription("Your left card is " + player_left_card.getCardDescription());
+                player_right_slot.setContentDescription("Your right card is " + player_right_card.getCardDescription());
+                animatePlayerTask = (AnimatePlayerCards) new AnimatePlayerCards().execute(player_left_card.getCardDrawable(),
                         player_right_card.getCardDrawable());
             } else{
                 //This is the first deal/turn
                 Log.d(TAG, "Player Turn False");
-                dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
-                player_left_slot.setContentDescription(player_left_card.getCardDescription());
-                player_right_slot.setContentDescription(player_right_card.getCardDescription());
+                dealer_left_slot.setContentDescription("Dealer left card is hidden until you stand");
+                dealer_right_slot.setContentDescription("Dealer right card is " + dealer_right_card.getCardDescription());
+                player_left_slot.setContentDescription("Your left card is " + player_left_card.getCardDescription());
+                player_right_slot.setContentDescription("Your right card is " + player_right_card.getCardDescription());
 
-                new FirstDealAnimation().execute(dealer_right_card.getCardDrawable(), player_left_card.getCardDrawable(),
+                firstTask = (FirstDealAnimation) new FirstDealAnimation().execute(dealer_right_card.getCardDrawable(), player_left_card.getCardDrawable(),
                         player_right_card.getCardDrawable());
             }
         }
@@ -680,7 +730,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
         @Override
         protected Integer[] doInBackground(Integer... params) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(750);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -696,38 +746,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_right_slot, player_left_slot, player_right_slot);
             //mButton.setEnabled(true);
-
-            changeAllButtonStates(true, true, true, true);
-        }
-    }
-
-    private class LeftDealerAnimation extends AsyncTask<Integer, Void, Integer[]> {
-        @Override
-        protected void onPreExecute() {
-            Log.d(TAG, "LeftDealerAnimation");
-            TransitionManager.beginDelayedTransition(group, new Explode());
-            toggleVisibility(dealer_left_slot);
-
-            changeAllButtonStates(false, false, false, false);
-        }
-
-        @Override
-        protected Integer[] doInBackground(Integer... params) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return params;
-        }
-
-        @Override
-        protected void onPostExecute(Integer... params) {
-            dealer_left_slot.setImageResource(params[0]);
-            TransitionManager.beginDelayedTransition(group, new Explode());
-            toggleVisibility(dealer_left_slot);
-            //mButton.setEnabled(true);
-
 
             changeAllButtonStates(true, true, true, true);
         }
@@ -818,7 +836,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
         savedInstanceState.putBoolean("PLAYER_HAD_ACE", player_had_ace);
         savedInstanceState.putBoolean("DEALER_TURN", dealer_turn);
         savedInstanceState.putBoolean("PLAYER_TURN", player_turn);
-        savedInstanceState.putBoolean("FIRST_TIME_DEALER", first_time_dealer);
 
         savedInstanceState.putInt("DEALER_TOP_TOTAL_VALUE", dealer_top_total_value);
         savedInstanceState.putInt("DEALER_BOT_TOTAL_VALUE", dealer_bot_total_value);
@@ -835,6 +852,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
         savedInstanceState.putString("DEALER_RIGHT_CARD", dealer_right_card.getCardKey());
         savedInstanceState.putString("PLAYER_LEFT_CARD", player_left_card.getCardKey());
         savedInstanceState.putString("PLAYER_RIGHT_CARD", player_right_card.getCardKey());
+
+        savedInstanceState.putBoolean("IS_FIRST_DRAW_SPOKEN", first_draw_spoken);
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -1059,11 +1078,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
             // Grab a new card.
             dealer_left_card = dealer_right_card;
             dealer_right_card = curDeck.getCard(generateRandomCard());
+            if(isAccessibilityEnabled) {
+                convertTextToSpeech("Dealer drew " + dealer_right_card.getCardDescription());
+            }
 
             Log.d(TAG, "(DelayDealerHit) Dealer drew " + dealer_right_card.getCardValue());
-
-
-
 
             // Grab the player's highest total
             highest_player_total = (player_top_total_value > player_bot_total_value)
@@ -1193,7 +1212,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     public void finishedDialog(String header, String body) {
         changeAllButtonStates(false, false, false, false);
-        new DelayDialog().execute(header, body);
+        delayDialogTask = (DelayDialog) new DelayDialog().execute(header, body);
     }
 
 
@@ -1275,6 +1294,28 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     @Override
     public void onStop() {
+        /* Cancel any AsyncTask and remove the Api Client and Text To Speech
+        *   client
+        */
+        if(firstTask != null){
+            firstTask.cancel(true);
+        }
+        if(animateDealerTask != null) {
+            animateDealerTask.cancel(true);
+        }
+        if(animatePlayerTask != null) {
+            animatePlayerTask.cancel(true);
+        }
+        if(delayDealerTask != null) {
+            delayDealerTask.cancel(true);
+        }
+        if(delayCheckTask != null) {
+            delayCheckTask.cancel(true);
+        }
+        if(delayDialogTask != null) {
+            delayDialogTask.cancel(true);
+        }
+        textToSpeech.shutdown();
         mGoogleApiClient.disconnect();
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         super.onStop();
@@ -1387,14 +1428,14 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 ? dealer_top_total_value
                 : dealer_bot_total_value;
 
-        if (dealer_left_card != null) {
+        if (dealer_left_card!=null) {
             sb.append("Dealer Left Card: " + dealer_left_card.getCardValue() + "\n");
         }
         sb.append("Dealer Right Card: " + dealer_right_card.getCardValue());
         sb.append("\nDealer Highest Total: " + highest_dealer_total);
-        sb.append("\n\nPlayer Left Card " + player_left_card.getCardValue());
-        sb.append("\nPlayer Right " + player_right_card.getCardValue());
-        sb.append("\nPlayer Highest " + highest_player_total);
+        sb.append("\n\nPlayer Left Card: " + player_left_card.getCardValue());
+        sb.append("\nPlayer Right Card: " + player_right_card.getCardValue());
+        sb.append("\nPlayer Highest Total: " + highest_player_total);
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -1426,4 +1467,13 @@ public class PlayBlackJackGameFragment extends Fragment implements
         button_start_over.setEnabled(button_start_over_state);
     }
 
+    private void convertTextToSpeech(String text) {
+        CharSequence t = text;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            textToSpeech.speak(t, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+        else {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
 }

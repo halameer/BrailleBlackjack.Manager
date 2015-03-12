@@ -2,97 +2,141 @@
     android:id="@+id/playFragment"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="finalproject.ece558.edu.pdx.ece.brailleblackjack.PlayBlackJackGameFragment">
+    tools:context="finalproject.ece558.edu.pdx.ece.brailleblackjack.PlayBlackJackGameFragment"
+    android:background="@color/background" >
 
     <!-- TODO: Update blank fragment layout -->
 
     <Button
-        android:layout_width="100dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:text="Hit"
+        android:text="@string/hit"
         android:id="@+id/button_hit"
-        android:src="@drawable/placeholder"
         android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="100dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
-        android:text="Stand"
+        android:text="@string/stand"
         android:id="@+id/button_stand"
-        android:src="@drawable/placeholder"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="20dp" />
+        android:layout_below="@+id/button_hit"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:text="@string/start_over"
+        android:id="@+id/button_start_over"
+        android:layout_marginLeft="75dp"
+        android:layout_above="@+id/button_hint"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hint"
+        android:id="@+id/button_hint"
+        android:layout_marginRight="75dp"
+        android:layout_above="@+id/button_hit"
+        android:layout_centerHorizontal="true"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_left_card"
         android:src="@drawable/placeholder"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/img_view_dealer_right_card"
+        android:layout_marginBottom="5dp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_right_card"
         android:src="@drawable/placeholder"
-        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="10dp" />
+        android:layout_marginBottom="5dp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_left_card"
         android:src="@drawable/placeholder"
+        android:layout_marginLeft="5dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_margin="10dp" />
+        android:layout_marginBottom="5dp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_right_card"
         android:src="@drawable/placeholder"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dp" />
+        android:layout_alignTop="@+id/img_view_player_left_card"
+        android:layout_toEndOf="@+id/img_view_player_left_card"
+        android:layout_marginBottom="5dp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_top_total"
         android:src="@drawable/total_1"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:tint="@color/white"
+        android:layout_above="@+id/img_view_dealer_left_card"
+        android:layout_alignStart="@+id/img_view_dealer_left_card" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_dealer_bot_total"
         android:src="@drawable/total_1"
-        android:layout_below="@+id/img_view_dealer_top_total"
-        android:layout_centerHorizontal="true" />
+        android:tint="@color/white"
+        android:layout_above="@+id/img_view_dealer_left_card"
+        android:layout_toEndOf="@+id/img_view_dealer_left_card" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_top_total"
         android:src="@drawable/total_1"
-        android:layout_above="@+id/img_view_player_bot_total"
-        android:layout_centerHorizontal="true" />
+        android:tint="@color/white"
+        android:layout_above="@+id/img_view_player_left_card"
+        android:layout_toEndOf="@+id/img_view_player_left_card" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/img_view_player_bot_total"
         android:src="@drawable/total_1"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:tint="@color/white"
+        android:layout_above="@+id/img_view_player_left_card"
+        android:layout_alignStart="@+id/img_view_player_left_card" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/dealer_totals"
+        android:contentDescription="@string/dealer_totals"
+        android:id="@+id/dealerView"
+        android:textColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/player_totals"
+        android:contentDescription="@string/player_totals"
+        android:id="@+id/playerView"
+        android:textColor="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="5dp" />
 
 </RelativeLayout>

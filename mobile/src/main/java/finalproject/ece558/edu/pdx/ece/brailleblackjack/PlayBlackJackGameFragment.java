@@ -81,8 +81,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
     private boolean button_hint_state;
     private boolean button_start_over_state;
 
-    private ImageButton button_hit;
-    private ImageButton button_stand;
+    private Button button_hit;
+    private Button button_stand;
     private Button button_start_over;
     private Button button_hint;
 
@@ -125,9 +125,18 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Bind views
         group = (ViewGroup) v.findViewById(R.id.playFragment);
 
+        dealer_left_slot = (ImageView) v.findViewById(R.id.img_view_dealer_left_card);
+        dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
+        player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
+        player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
+
+        dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
+        dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
+        player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
+        player_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_player_bot_total);
 
         /* Hit button Listener */
-        button_hit = (ImageButton) v.findViewById(R.id.button_hit);
+        button_hit = (Button) v.findViewById(R.id.button_hit);
         button_hit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +145,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
         });
 
         /* Stand button Listener */
-        button_stand = (ImageButton) v.findViewById(R.id.button_stand);
+        button_stand = (Button) v.findViewById(R.id.button_stand);
         button_stand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,20 +175,69 @@ public class PlayBlackJackGameFragment extends Fragment implements
             }
         });
 
-        dealer_left_slot = (ImageView) v.findViewById(R.id.img_view_dealer_left_card);
-        dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
-        player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
-        player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
-
-        dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
-        dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
-        player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
-        player_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_player_bot_total);
-
         // If activity recreated (such as from screen rotate), restore
         // the previous article selection set by onSaveInstanceState().
         // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
+            /* Restore Variables and Flags */
+            dealer_had_ace = savedInstanceState.getBoolean("DEALER_HAD_ACE");
+            player_had_ace = savedInstanceState.getBoolean("PLAYER_HAD_ACE");
+            dealer_turn = savedInstanceState.getBoolean("DEALER_TURN");
+            player_turn = savedInstanceState.getBoolean("PLAYER_TURN");
+            first_time_dealer = savedInstanceState.getBoolean("FIRST_TIME_DEALER");
+
+            dealer_top_total_value = savedInstanceState.getInt("DEALER_TOP_TOTAL_VALUE");
+            dealer_bot_total_value = savedInstanceState.getInt("DEALER_BOT_TOTAL_VALUE");
+            player_top_total_value = savedInstanceState.getInt("PLAYER_TOP_TOTAL_VALUE");
+            dealer_bot_total_value = savedInstanceState.getInt("PLAYER_BOT_TOTAL_VALUE");
+
+            button_hit_state = savedInstanceState.getBoolean("BUTTON_HIT_STATE");
+            button_stand_state = savedInstanceState.getBoolean("BUTTON_STAND_STATE");
+
+            /* Restore Cards */
+            curDeck = new Deck(context);
+            String d_left, d_right, p_left, p_right;
+            boolean dealer_left_exists = savedInstanceState.getBoolean("DEALER_LEFT_EXISTS");
+            if (dealer_left_exists) {
+                d_left = savedInstanceState.getString("DEALER_LEFT_CARD");
+                dealer_left_card = curDeck.getCard(d_left);
+                dealer_left_slot.setImageResource(dealer_left_card.getCardDrawable());
+                dealer_left_slot.setContentDescription(dealer_left_card.getCardDescription());
+            }
+            d_right = savedInstanceState.getString("DEALER_RIGHT_CARD");
+            p_left = savedInstanceState.getString("PLAYER_LEFT_CARD");
+            p_right = savedInstanceState.getString("PLAYER_RIGHT_CARD");
+
+            dealer_right_card = curDeck.getCard(d_right);
+            player_left_card = curDeck.getCard(p_left);
+            player_right_card = curDeck.getCard(p_right);
+
+            dealer_right_slot.setContentDescription(dealer_right_card.getCardDescription());
+            player_left_slot.setContentDescription(player_left_card.getCardDescription());
+            player_right_slot.setContentDescription(player_right_card.getCardDescription());
+
+            dealer_right_slot.setImageResource(dealer_right_card.getCardDrawable());
+            player_left_slot.setImageResource(player_left_card.getCardDrawable());
+            player_right_slot.setImageResource(player_right_card.getCardDrawable());
+
+            /* Restore Views */
+            dealer_top_total_slot.setImageResource(giveTotalDrawable(dealer_top_total_value));
+
+            player_top_total_slot.setImageResource(giveTotalDrawable(player_top_total_value));
+
+            if (player_bot_total_value > 0) {
+                player_bot_total_slot.setImageResource(giveTotalDrawable(player_bot_total_value));
+                player_bot_total_slot.setVisibility(v.VISIBLE);
+            } else {
+                player_bot_total_slot.setVisibility(v.INVISIBLE);
+            }
+
+            if (dealer_bot_total_value > 0) {
+                dealer_bot_total_slot.setImageResource(giveTotalDrawable(dealer_bot_total_value));
+                dealer_bot_total_slot.setVisibility(v.VISIBLE);
+            } else {
+                dealer_bot_total_slot.setVisibility(v.INVISIBLE);
+            }
         } else {
             // Start Android Wear App if its connected
             sendMessage(START_WEAR);
@@ -189,8 +247,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Inflate the layout for this fragment
         return v;
     }
-
-
 
 
     public void gameSetup() {
@@ -690,8 +746,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot, dealer_right_slot);
             //mButton.setEnabled(true);
-
-            changeAllButtonStates(false, false, true, true);
         }
     }
 
@@ -744,23 +798,30 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("DEALER_HAD_ACE", dealer_had_ace);
-        outState.putBoolean("PLAYER_HAD_ACE", player_had_ace);
-        outState.putBoolean("DEALER_TURN", dealer_turn);
-        outState.putBoolean("PLAYER_TURN", player_turn);
-        outState.putBoolean("FIRST_TIME_DEALER", first_time_dealer);
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.getBoolean("DEALER_HAD_ACE", dealer_had_ace);
+        savedInstanceState.putBoolean("PLAYER_HAD_ACE", player_had_ace);
+        savedInstanceState.putBoolean("DEALER_TURN", dealer_turn);
+        savedInstanceState.putBoolean("PLAYER_TURN", player_turn);
+        savedInstanceState.putBoolean("FIRST_TIME_DEALER", first_time_dealer);
 
-        outState.putInt("DEALER_TOP_TOTAL_VALUE", dealer_top_total_value);
-        outState.putInt("DEALER_BOT_TOTAL_VALUE", dealer_bot_total_value);
-        outState.putInt("PLAYER_TOP_TOTAL_VALUE", player_top_total_value);
-        outState.putInt("PLAYER_BOT_TOTAL_VALUE", dealer_bot_total_value);
+        savedInstanceState.putInt("DEALER_TOP_TOTAL_VALUE", dealer_top_total_value);
+        savedInstanceState.putInt("DEALER_BOT_TOTAL_VALUE", dealer_bot_total_value);
+        savedInstanceState.putInt("PLAYER_TOP_TOTAL_VALUE", player_top_total_value);
+        savedInstanceState.putInt("PLAYER_BOT_TOTAL_VALUE", dealer_bot_total_value);
 
-        outState.putBoolean("BUTTON_HIT_STATE", button_hit_state);
-        outState.putBoolean("BUTTON_STAND_STATE", button_stand_state);
+        savedInstanceState.putBoolean("BUTTON_HIT_STATE", button_hit_state);
+        savedInstanceState.putBoolean("BUTTON_STAND_STATE", button_stand_state);
 
+        if(dealer_left_card != null) {
+            savedInstanceState.putBoolean("DEALER_LEFT_EXISTS", true);
+            savedInstanceState.putString("DEALER_LEFT_CARD", dealer_left_card.getCardKey());
+        }
+        savedInstanceState.putString("DEALER_RIGHT_CARD", dealer_right_card.getCardKey());
+        savedInstanceState.putString("PLAYER_LEFT_CARD", player_left_card.getCardKey());
+        savedInstanceState.putString("PLAYER_RIGHT_CARD", player_right_card.getCardKey());
 
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     public String generateRandomCard() {

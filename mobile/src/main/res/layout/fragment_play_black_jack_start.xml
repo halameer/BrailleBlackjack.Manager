@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="finalproject.ece558.edu.pdx.ece.brailleblackjack.PlayBlackJackStartFragment">
+    tools:context="finalproject.ece558.edu.pdx.ece.brailleblackjack.PlayBlackJackStartFragment"
+    android:background="@color/background" >
 
     <!-- TODO: Update blank fragment layout -->
     <Button
@@ -19,7 +20,9 @@
         android:id="@+id/img_view_dealer_left_card"
         android:src="@drawable/placeholder"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"  />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="3dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -27,7 +30,9 @@
         android:id="@+id/img_view_dealer_right_card"
         android:src="@drawable/heart_ace"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="3dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -35,7 +40,9 @@
         android:id="@+id/img_view_player_left_card"
         android:src="@drawable/spades_ace"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"  />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="3dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -43,7 +50,9 @@
         android:id="@+id/img_view_player_right_card"
         android:src="@drawable/placeholder"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="3dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -51,7 +60,8 @@
         android:id="@+id/img_view_dealer_top_total"
         android:src="@drawable/total_1"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:tint="@color/white" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -59,7 +69,8 @@
         android:id="@+id/img_view_dealer_bot_total"
         android:src="@drawable/total_11"
         android:layout_below="@+id/img_view_dealer_top_total"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:tint="@color/white" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -67,7 +78,8 @@
         android:id="@+id/img_view_player_top_total"
         android:src="@drawable/total_1"
         android:layout_above="@+id/img_view_player_bot_total"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:tint="@color/white" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -75,7 +87,8 @@
         android:id="@+id/img_view_player_bot_total"
         android:src="@drawable/total_11"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:tint="@color/white" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,8 +97,9 @@
         android:text="@string/dealer_totals"
         android:contentDescription="@string/player_totals"
         android:id="@+id/dealerView"
-        android:layout_below="@+id/img_view_dealer_bot_total"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/img_view_dealer_right_card"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -95,5 +109,6 @@
         android:contentDescription="@string/player_totals"
         android:id="@+id/playerView"
         android:layout_above="@+id/img_view_player_left_card"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white" />
 </RelativeLayout>

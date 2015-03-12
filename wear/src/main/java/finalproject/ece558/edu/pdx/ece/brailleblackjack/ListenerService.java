@@ -46,6 +46,7 @@ public class ListenerService extends WearableListenerService {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+
         } else if(WIN_MESSAGE.equals(messageEvent.getPath())){
             /* A win should have a single long vibration*/
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);

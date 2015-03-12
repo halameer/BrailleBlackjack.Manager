@@ -1262,6 +1262,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
             builder.setMessage(params[1])
                     .setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            FragmentTransaction fm = getFragmentManager().beginTransaction();
+                            fm.replace(R.id.fragment_container, new PlayBlackJackGameFragment());
+                            fm.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            //fm.addToBackStack(null);
+                            fm.commit();
                         }
                     })
                     .setNegativeButton(R.string.give_up, new DialogInterface.OnClickListener() {

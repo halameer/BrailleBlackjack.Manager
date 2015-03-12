@@ -171,7 +171,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
         button_hint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Hint logic
+               hintDialog();
             }
         });
 
@@ -1236,11 +1236,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
             builder.setMessage(params[1])
                     .setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            FragmentTransaction fm = getFragmentManager().beginTransaction();
-                            fm.replace(R.id.fragment_container, new PlayBlackJackGameFragment());
-                            fm.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            //fm.addToBackStack(null);
-                            fm.commit();
                         }
                     })
                     .setNegativeButton(R.string.give_up, new DialogInterface.OnClickListener() {
@@ -1373,6 +1368,49 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
+    }
+
+    public void hintDialog()
+    {
+        Log.d(TAG, "In hintDialog");
+        StringBuilder sb = new StringBuilder();
+        int highest_dealer_total;
+        int highest_player_total;
+
+        // Grab the player's highest total
+        highest_player_total = (player_top_total_value > player_bot_total_value)
+                ? player_top_total_value
+                : player_bot_total_value;
+
+        // Grab the player's highest total
+        highest_dealer_total = (dealer_top_total_value > dealer_bot_total_value)
+                ? dealer_top_total_value
+                : dealer_bot_total_value;
+
+        if (dealer_left_card != null) {
+            sb.append("Dealer Left Card: " + dealer_left_card.getCardValue() + "\n");
+        }
+        sb.append("Dealer Right Card: " + dealer_right_card.getCardValue());
+        sb.append("\nDealer Highest Total: " + highest_dealer_total);
+        sb.append("\n\nPlayer Left Card " + player_left_card.getCardValue());
+        sb.append("\nPlayer Right " + player_right_card.getCardValue());
+        sb.append("\nPlayer Highest " + highest_player_total);
+
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getResources().getString(R.string.hint));
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setMessage(sb.toString())
+                .setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = builder.create();
+
+        // show it
+        alertDialog.show();
     }
 
     public void changeAllButtonStates(boolean hit_state, boolean stand_state, boolean hint_state, boolean start_over_state)

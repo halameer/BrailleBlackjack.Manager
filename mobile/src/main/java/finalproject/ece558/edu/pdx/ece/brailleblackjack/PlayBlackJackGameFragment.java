@@ -100,6 +100,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
     private final String START_WEAR = "#START";
     private final String PLAYER_WINS = "#WIN";
     private final String PLAYER_LOSES = "#LOSE";
+    private final String PLAYER_DRAW = "#DRAW";
 
     FirstDealAnimation firstTask = null;
     AnimateDealerCards animateDealerTask = null;
@@ -362,7 +363,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 // Player Hit black jack, but the dealer might hit one too
                 {
                     Log.d(TAG, "(gameSetup) Player got Black Jack but dealer might get one too");
-                    dealerSetup();
+                    updateView();
+                    // Player hit a black jack and dealer first card isn't an ace
+                    finishedDialog(getResources().getString(R.string.player_black_jack),
+                            getResources().getString(R.string.player_wins) +
+                                    "\nUser had " + player_top_total_value);
+                    return;
                 }
             } else {
                 player_top_total_value = player_left_card.getCardValue()
@@ -396,7 +402,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 // Player Hit black jack, but the dealer might hit one too
                 {
                     Log.d(TAG, "(gameSetup) Player got Black Jack but dealer might get one too");
-                    dealerSetup();
+                    updateView();
+                    // Player hit a black jack and dealer first card isn't an ace
+                    finishedDialog(getResources().getString(R.string.player_black_jack),
+                            getResources().getString(R.string.player_wins) +
+                                    "\nUser had " + player_top_total_value);
+                    return;
                 }
             }else {
                 player_top_total_value = player_left_card.getCardValue()
@@ -1258,12 +1269,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
             } else if(params[0].equals(getResources().getString(R.string.player_loses))){
                 sendMessage(PLAYER_LOSES);
             } else{
-                //Both player and dealer push, send nothing
+                //Both player and dealer push, send DRAW
+                Log.d(TAG, "Draw");
+                sendMessage(PLAYER_DRAW);
             }
 
-            /* Disconnect the messaging API Listener since button are disabled */
-            mGoogleApiClient.disconnect();
-            //Wearable.MessageApi.removeListener(mGoogleApiClient, this);
 
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -1293,6 +1303,9 @@ public class PlayBlackJackGameFragment extends Fragment implements
             alertDialog.show();
 
             changeAllButtonStates(false, false, false, true);
+
+            /* Disconnect the messaging API Listener since button are disabled */
+            //mGoogleApiClient.disconnect();
         }
     }
 
@@ -1428,10 +1441,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     public void blackJackToast()
     {
-        if(mGoogleApiClient.isConnected()){
-            mGoogleApiClient.disconnect();
-        }
-
         changeAllButtonStates(false, false, false, false);
 
         CharSequence text = "You have 21!";

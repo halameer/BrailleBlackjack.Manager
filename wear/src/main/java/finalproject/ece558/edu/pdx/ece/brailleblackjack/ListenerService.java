@@ -18,6 +18,7 @@ public class ListenerService extends WearableListenerService {
     final String START_ACTIVITY_MESSAGE = "#START";
     final String WIN_MESSAGE = "#WIN";
     final String LOSE_MESSAGE = "#LOSE";
+    final String DRAW_MESSAGE = "#DRAW";
 
 
     /**
@@ -63,6 +64,13 @@ public class ListenerService extends WearableListenerService {
             final int indexInPatternToRepeat = -1;
             vibrator.vibrate(vibrationPattern, indexInPatternToRepeat);
 
+        } else if(DRAW_MESSAGE.equals(messageEvent.getPath())){
+            /* A lose should have a two short vibrations */
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] vibrationPattern = {0, 300, 50, 300, 50, 300};
+            //-1 - don't repeat
+            final int indexInPatternToRepeat = -1;
+            vibrator.vibrate(vibrationPattern, indexInPatternToRepeat);
         }
     }
 

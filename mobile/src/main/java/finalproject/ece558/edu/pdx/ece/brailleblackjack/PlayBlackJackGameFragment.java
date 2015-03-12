@@ -483,6 +483,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     // Player loses
                     else if ((11 + player_top_total_value) > 21
                             && (1 + player_top_total_value) > 21) {
+                        player_top_total_value += 1;
                         player_bot_total_value = 0;
 
                         // Player busted and lost
@@ -760,10 +761,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
         @Override
         protected void onPreExecute() {
             Log.d(TAG, "AnimateDealerCards");
+            changeAllButtonStates(false, false, false, false);
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot, dealer_right_slot);
 
-            changeAllButtonStates(false, false, false, false);
+
         }
 
         @Override
@@ -784,6 +786,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
             TransitionManager.beginDelayedTransition(group, new Explode());
             toggleVisibility(dealer_left_slot, dealer_right_slot);
             //mButton.setEnabled(true);
+            changeAllButtonStates(false, false, true, true);
         }
     }
 
@@ -1227,7 +1230,10 @@ public class PlayBlackJackGameFragment extends Fragment implements
         @Override
         protected void onPreExecute() {
             Log.d(TAG, "In finshedDialog");
+
+            changeAllButtonStates(false, false, false, false);
         }
+
 
         @Override
         protected String[] doInBackground(String... params) {
@@ -1422,6 +1428,12 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     public void blackJackToast()
     {
+        if(mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
+
+        changeAllButtonStates(false, false, false, false);
+
         CharSequence text = "You have 21!";
         int duration = Toast.LENGTH_SHORT;
 

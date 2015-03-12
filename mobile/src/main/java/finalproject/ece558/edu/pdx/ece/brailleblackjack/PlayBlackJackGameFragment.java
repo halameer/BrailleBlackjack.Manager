@@ -611,7 +611,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     + 11;
             // Dealer's first card was 10, second card is an Ace
             // Dealer got Black ShouldJack
-            if (dealer_right_card.getCardValue() == 10) {
+            if (dealer_left_card.getCardValue() == 10) {
                 dealer_top_total_value = 21;
                 dealer_bot_total_value = 0;
                 if (final_player_total == 21) {
@@ -1266,6 +1266,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
             builder.setMessage(params[1])
                     .setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            FragmentTransaction fm = getFragmentManager().beginTransaction();
+                            fm.replace(R.id.fragment_container, new PlayBlackJackGameFragment());
+                            fm.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                            //fm.addToBackStack(null);
+                            fm.commit();
                         }
                     })
                     .setNegativeButton(R.string.give_up, new DialogInterface.OnClickListener() {

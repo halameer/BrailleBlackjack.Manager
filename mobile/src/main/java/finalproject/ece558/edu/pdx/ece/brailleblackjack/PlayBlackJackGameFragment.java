@@ -381,7 +381,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
                 blackJackToast();
 
-                if (dealer_left_card.getCardValue() == 10) {
+                if (dealer_right_card.getCardValue() == 10) {
                     Log.d(TAG, "(gameSetup) Player got Black Jack and dealer isn't showing ace");
                     updateView();
 
@@ -687,11 +687,11 @@ public class PlayBlackJackGameFragment extends Fragment implements
         if (dealer_bot_total_value > 0) {
             dealer_bot_total_slot.setImageResource(giveTotalDrawable(dealer_bot_total_value));
             dealer_bot_total_slot.setVisibility(v.VISIBLE);
-            dealer_top_total_slot.setContentDescription("Because of an ace dealer has an alternative total of" +
+            dealer_bot_total_slot.setContentDescription("Because of an ace dealer has an alternative total of" +
                     String.valueOf(dealer_bot_total_value));
         } else {
             dealer_bot_total_slot.setVisibility(v.INVISIBLE);
-            dealer_top_total_slot.setContentDescription("");
+            dealer_bot_total_slot.setContentDescription("");
         }
 
         if (dealer_turn) {
@@ -1255,6 +1255,10 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 //Both player and dealer push, send nothing
             }
 
+            /* Disconnect the messaging API Listener since button are disabled */
+            mGoogleApiClient.disconnect();
+            //Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(params[0]);
@@ -1262,11 +1266,6 @@ public class PlayBlackJackGameFragment extends Fragment implements
             builder.setMessage(params[1])
                     .setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            FragmentTransaction fm = getFragmentManager().beginTransaction();
-                            fm.replace(R.id.fragment_container, new PlayBlackJackGameFragment());
-                            fm.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            //fm.addToBackStack(null);
-                            fm.commit();
                         }
                     })
                     .setNegativeButton(R.string.give_up, new DialogInterface.OnClickListener() {
@@ -1328,7 +1327,9 @@ public class PlayBlackJackGameFragment extends Fragment implements
             delayDialogTask.cancel(true);
         }
         textToSpeech.shutdown();
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         super.onStop();
     }

@@ -172,11 +172,13 @@ public class PlayBlackJackGameFragment extends Fragment implements
         // Bind views
         group = (ViewGroup) v.findViewById(R.id.playFragment);
 
+        // Set up the card slots
         dealer_left_slot = (ImageView) v.findViewById(R.id.img_view_dealer_left_card);
         dealer_right_slot = (ImageView) v.findViewById(R.id.img_view_dealer_right_card);
         player_left_slot = (ImageView) v.findViewById(R.id.img_view_player_left_card);
         player_right_slot = (ImageView) v.findViewById(R.id.img_view_player_right_card);
 
+        // Set up the total slots
         dealer_top_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_top_total);
         dealer_bot_total_slot = (ImageView) v.findViewById(R.id.img_view_dealer_bot_total);
         player_top_total_slot = (ImageView) v.findViewById(R.id.img_view_player_top_total);
@@ -325,13 +327,16 @@ public class PlayBlackJackGameFragment extends Fragment implements
         Log.d(TAG, "(gameSetup) Player old  " + player_left_card.getCardValue());
         Log.d(TAG, "(gameSetup) Player drew  " + player_right_card.getCardValue());
 
+        // check if the dealer pulled an ace
         if (dealer_right_card.getCardValue() == 1)
         {
+            // setup the both total values
             dealer_top_total_value =  dealer_right_card.getCardValue();
             dealer_bot_total_value =  11;
         }
         else
         {
+            // setup only the top total
             dealer_top_total_value =  dealer_right_card.getCardValue();
             dealer_bot_total_value = 0;
         }
@@ -371,6 +376,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     return;
                 }
             } else {
+                // Player didn't get a black jack, set up totals for player top and bottom
                 player_top_total_value = player_left_card.getCardValue()
                         + player_right_card.getCardValue();
                 player_bot_total_value = 11
@@ -385,6 +391,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 player_top_total_value = 21;
                 player_bot_total_value = 0;
 
+                // Announce player black jack
                 blackJackToast();
 
                 if (dealer_right_card.getCardValue() > 1) {
@@ -410,6 +417,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
                     return;
                 }
             }else {
+                // Player didn't hit a black jack, just set up the two totals
                 player_top_total_value = player_left_card.getCardValue()
                         + player_right_card.getCardValue();
                 player_bot_total_value = player_left_card.getCardValue()
@@ -418,12 +426,13 @@ public class PlayBlackJackGameFragment extends Fragment implements
             }
         }
         // Both cards are aces
+        // Set the top totals ace Ace = 1 + 1, bot as Ace = 1 and Ace =11
         else if (player_right_card.getCardValue() == 1 && player_left_card.getCardValue() == 1) {
             player_top_total_value = player_left_card.getCardValue() + player_right_card.getCardValue();
             player_bot_total_value = player_left_card.getCardValue() + 11;
             player_had_ace = true;
         }
-        // Both cards are NOT aces
+        // Both cards are NOT aces Only deal with the top value
         else if (player_right_card.getCardValue() > 1 && player_left_card.getCardValue() > 1) {
             player_top_total_value = player_left_card.getCardValue()
                     + player_right_card.getCardValue();
@@ -444,6 +453,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
 
     }
 
+
+    // Invoked when the player hits via the wear or the mobile device
     public void playerHits() {
         Log.d(TAG, "In playerHits");
         // Grab a new card.
@@ -453,6 +464,7 @@ public class PlayBlackJackGameFragment extends Fragment implements
             convertTextToSpeech("You drew " + player_right_card.getCardDescription());
         }
 
+        // Grab the new total
         player_top_total_value += player_right_card.getCardValue();
 
         if (player_had_ace) {
@@ -524,8 +536,8 @@ public class PlayBlackJackGameFragment extends Fragment implements
                 }
             }
             // Player has not gotten an ace
+            // only deal with the top value
             else {
-
 
                 if (player_top_total_value > 21) {
                     // Player busted
@@ -548,12 +560,14 @@ public class PlayBlackJackGameFragment extends Fragment implements
     }
 
 
+    // Invoked when the player stands
     public void playerStands() {
         Log.d(TAG, "(playerStands) Player is done.");
         dealerSetup();
     }
 
 
+    // Invoked whent he player stands or player hits 21 not through a blakc jack.
     public void dealerSetup() {
         Log.d(TAG, "In dealerSetup");
         int final_player_total;

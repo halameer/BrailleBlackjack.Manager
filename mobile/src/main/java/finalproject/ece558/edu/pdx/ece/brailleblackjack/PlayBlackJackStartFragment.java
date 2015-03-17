@@ -17,7 +17,6 @@ public class PlayBlackJackStartFragment extends Fragment {
 
         // If activity recreated (such as from screen rotate), restore
         // the previous article selection set by onSaveInstanceState().
-        // This is primarily necessary when in the two-pane layout.
         if (savedInstanceState != null) {
         }
 

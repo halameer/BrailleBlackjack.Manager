@@ -43,15 +43,7 @@ import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Demonstrates a "screen-slide" animation using a {@link android.support.v4.view.ViewPager}. Because {@link android.support.v4.view.ViewPager}
- * automatically plays such an animation when calling {@link android.support.v4.view.ViewPager#setCurrentItem(int)}, there
- * isn't any animation-specific code in this sample.
- *
- * <p>This sample shows a "next" button that advances the user to the next step in a wizard,
- * animating the current screen out (to the left) and the next screen in (from the right). The
- * reverse animation is played when the user presses the "previous" button.</p>
- *
- * @see LearnBrailleFragment
+ * Displays the credit
  */
 public class AboutActivity extends Activity{
 

@@ -51,10 +51,8 @@ public class LearnBrailleActivity extends FragmentActivity {
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                // When changing pages, reset the action bar actions since they are dependent
-                // on which page is currently active. An alternative approach is to have each
-                // fragment expose actions itself (rather than the activity exposing actions),
-                // but for simplicity, the activity provides the actions in this sample.
+                // reset the action bar actions since they are dependent
+                // on which page is currently active.
                 invalidateOptionsMenu();
             }
         });
@@ -65,7 +63,7 @@ public class LearnBrailleActivity extends FragmentActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        // Add either a "next" or "finish" button to the action bar, depending on which page
+        // Add/enable previous button depending on which page is active
         // is currently selected.
         MenuItem prev_item = menu.add(Menu.NONE, R.id.action_previous, Menu.NONE, R.string.action_previous);
 
@@ -73,8 +71,8 @@ public class LearnBrailleActivity extends FragmentActivity {
 
         menu.findItem(R.id.action_previous).setEnabled(mPager.getCurrentItem() > 0);
 
-        // Add either a "next" or "finish" button to the action bar, depending on which page
-        // is currently selected.
+        // Add either a "next" or "finished" button to the action bar, depending on which page
+        // is currently active.
         MenuItem next_item = menu.add(Menu.NONE, R.id.action_next, Menu.NONE,
                 (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1)
                         ? R.string.action_finish
@@ -91,8 +89,7 @@ public class LearnBrailleActivity extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // Navigate "up" the demo structure to the launchpad activity.
-                // See http://developer.android.com/design/patterns/navigation.html for more.
+                // Navigate back to the main activity
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
 

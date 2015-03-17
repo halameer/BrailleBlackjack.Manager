@@ -10,8 +10,7 @@ import android.widget.ImageView;
 
 
 /**
- * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
- * the page number, along with some dummy text.
+ * A fragment representing each slide
  */
 public class LearnBrailleFragment extends android.support.v4.app.Fragment {
     /**
@@ -25,7 +24,7 @@ public class LearnBrailleFragment extends android.support.v4.app.Fragment {
     private int mPageNumber;
 
     /**
-     * Factory method for this fragment class. Constructs a new fragment for the given page number.
+     * Constructs a new fragment for the given page number.
      */
     public static LearnBrailleFragment create(int pageNumber) {
         LearnBrailleFragment fragment = new LearnBrailleFragment();
@@ -55,18 +54,22 @@ public class LearnBrailleFragment extends android.support.v4.app.Fragment {
 
         switch (mPageNumber+1) {
             case 1:
+                // Switch to number card
                 img.setImageDrawable(getResources().getDrawable(R.drawable.numbers));
                 img.setContentDescription(getResources().getString(R.string.description_numbers));
                 break;
             case 2:
+                // Switch to capitalization card
                 img.setImageDrawable(getResources().getDrawable(R.drawable.capital_letters));
                 img.setContentDescription(getResources().getString(R.string.description_capitalization));
                 break;
             case 3:
+                // Switch to Alphabet a-m card
                 img.setImageDrawable(getResources().getDrawable(R.drawable.letters_atom));
                 img.setContentDescription(getResources().getString(R.string.description_letters_atom));
                 break;
             case 4:
+                // Switch to Alphabet n-z card
                 img.setImageDrawable(getResources().getDrawable(R.drawable.letters_ntoz));
                 img.setContentDescription(getResources().getString(R.string.description_letters_ntoz));
                 break;

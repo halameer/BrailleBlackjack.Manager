@@ -31,11 +31,10 @@ public class PlayBlackJackActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_black_jack);
 
-        // Check whether the activity is using the layout version with
-        // the fragment_container FrameLayout. If so, we must add the first fragment
+        // Switch to the PlayBlackJackStartFragment
         if (findViewById(R.id.fragment_container) != null) {
             Log.d(TAG, "In onCreate");
-            // However, if we're being restored from a previous state,
+            // If we're being restored from a previous state,
             // then we don't need to do anything and should return or else
             // we could end up with overlapping fragments.
             if (savedInstanceState != null) {
@@ -43,11 +42,8 @@ public class PlayBlackJackActivity extends Activity {
             }
 
             Log.d(TAG, "Launching new fragment");
-            // Create an instance of ExampleFragment
+            // Create an instance PlayblackJackStartFragment
             PlayBlackJackStartFragment startFragment = new PlayBlackJackStartFragment();
-
-            // In case this activity was started with special instructions from an Intent,
-            // pass the Intent's extras to the fragment as arguments
             startFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
@@ -70,8 +66,7 @@ public class PlayBlackJackActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // Navigate "up" the demo structure to the launchpad activity.
-                // See http://developer.android.com/design/patterns/navigation.html for more.
+                // Navigate back to menu
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
         }

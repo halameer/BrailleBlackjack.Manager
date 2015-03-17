@@ -44,7 +44,7 @@ import java.util.List;
  * This activity class views the layout of the Android Wear portion of the application. It simply
  *  provides another place for the Player to press Hit or Stand
  */
-public class MainActivity extends Activity {
+public class WearActivity extends Activity {
     // Logcat tag
     private static final String TAG = "WearActivity";
     private GoogleApiClient mGoogleApiClient;

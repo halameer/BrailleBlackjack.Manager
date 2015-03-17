@@ -72,7 +72,7 @@ public class ListenerService extends WearableListenerService {
             final int indexInPatternToRepeat = -1;
             vibrator.vibrate(vibrationPattern, indexInPatternToRepeat);
         } else if(START_ACTIVITY_MESSAGE.equals(messageEvent.getPath())){
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, WearActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 

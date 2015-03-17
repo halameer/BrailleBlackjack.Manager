@@ -1,3 +1,25 @@
+/*  Braille BlackJack - An android program that aims to teach Braille Numbers is a fun way by playing the
+ *   game blackjack
+ *
+ *   Copyright (C) 2015 Hussein AlAmeer, and Tu Truong
+ *
+ *   This file is part of Braille BlackJack.
+ *
+ *   Braille BlackJack is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Braille BlackJack is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.app.Activity;
@@ -18,6 +40,10 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
 
+/**
+ * This activity class views the layout of the Android Wear portion of the application. It simply
+ *  provides another place for the Player to press Hit or Stand
+ */
 public class MainActivity extends Activity {
     // Logcat tag
     private static final String TAG = "WearActivity";
@@ -30,6 +56,13 @@ public class MainActivity extends Activity {
     /**
      * Create the wear layout to show 2 buttons, they simulate Hit and Stand buttons
      *  that exist on the Phone app portion in the Play BlackJack Game Fragment
+     *
+     * It sends to a possibly connected Android Phone device using the Wearable Data Layer API,
+     * which is part of Google Play service. This application specifically uses the MessageApi.
+     * The message is sent when a button is pressed
+     *
+     * A user from stackoverflow.com explained how to send messaged between Phone and Wear
+     * Source: http://stackoverflow.com/questions/24711232/button-click-in-android-wear
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {

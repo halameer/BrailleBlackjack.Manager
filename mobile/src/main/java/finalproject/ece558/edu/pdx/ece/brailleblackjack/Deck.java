@@ -1,3 +1,25 @@
+/*  Braille BlackJack - An android program that aims to teach Braille Numbers is a fun way by playing the
+ *   game blackjack
+ *
+ *   Copyright (C) 2015 Hussein AlAmeer, and Tu Truong
+ *
+ *   This file is part of Braille BlackJack.
+ *
+ *   Braille BlackJack is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Braille BlackJack is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.content.ContentValues;
@@ -6,7 +28,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * This class manages the deck database by adding cards and retrieving card
+ * This class represent a deck and it manages the deck database.
  */
 public class Deck {
     DeckDatabase storage;
@@ -24,6 +46,11 @@ public class Deck {
      *  the card's drawable image integer
      *  and the card's value as an integer (1-10)
      *  NOTE: Ace will be identified as 1 but it has a possible value of 11
+     * @param key String of Card id
+     * @param description String of card description
+     * @param drawable Integer of resource pointer
+     * @param value Integer of card value
+     * @return Long of the id of the database insert
      */
     public long insertCard(String key,
                            String description,
@@ -42,8 +69,10 @@ public class Deck {
     }
 
     /**
-     * This method retrieves a card's information from the database
+     * This method queries and retrieves a card's information from the database
      * using the key to query the database
+     * @param key String of the card ID
+     * @return Card object, see Class Card
      */
     public Card getCard(String key){
 
@@ -93,6 +122,10 @@ public class Deck {
         return card;
     }
 
+    /**
+     * Add a whole deck of cards to the database.
+     * @param context Context of the caller
+     */
     public  void addCardsToDB(Context context){
         // Adding club suit
         insertCard("1_of_clubs", context.getString(R.string.description_1_clubs), R.drawable.clubs_ace, 1);

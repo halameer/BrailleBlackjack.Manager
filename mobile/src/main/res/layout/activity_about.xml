@@ -23,22 +23,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Originally Designed and Created by Hussein AlAmeer and Tu Truong."
+        android:text="@string/authors"
         android:id="@+id/origin"
         android:gravity="center"
-        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_margin="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="This app was made using various bits of code examples from Android Open Source Project from developer.android.com.\n\n Licensed under the Apache 2.0 license."
+        android:text="@string/credit"
         android:id="@+id/credit"
         android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/origin"
+        android:layout_centerHorizontal="true"
+        android:textSize="11sp" />
 
 </RelativeLayout>
 

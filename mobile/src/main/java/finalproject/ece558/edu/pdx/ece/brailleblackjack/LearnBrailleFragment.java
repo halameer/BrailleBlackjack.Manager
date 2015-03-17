@@ -1,3 +1,25 @@
+/*  Braille BlackJack - An android program that aims to teach Braille Numbers is a fun way by playing the
+ *   game blackjack
+ *
+ *   Copyright (C) 2015 Hussein AlAmeer, and Tu Truong
+ *
+ *   This file is part of Braille BlackJack.
+ *
+ *   Braille BlackJack is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Braille BlackJack is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.app.Fragment;
@@ -8,23 +30,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
 
-
 /**
- * A fragment representing each slide
+ * This fragment class represent a card being used in the Learn Braille Section of the app.
+ * It takes a specific page (image/card of what to show like braille numbers) builds and inflates it
+ *  into view
  */
 public class LearnBrailleFragment extends android.support.v4.app.Fragment {
-    /**
-     * The argument key for the page number this fragment represents.
-     */
+     /* The argument key for the page number this fragment represents. */
     public static final String ARG_PAGE = "page";
 
-    /**
-     * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
-     */
+    /* The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}. */
     private int mPageNumber;
 
     /**
-     * Constructs a new fragment for the given page number.
+     * Fully Qualified Constructor. Constructs a new fragment for the given page number.
+     * @param pageNumber Build the fragment around the given page
+     * @return Fragment
      */
     public static LearnBrailleFragment create(int pageNumber) {
         LearnBrailleFragment fragment = new LearnBrailleFragment();
@@ -34,15 +55,29 @@ public class LearnBrailleFragment extends android.support.v4.app.Fragment {
         return fragment;
     }
 
+    /**
+     * Default Constructor
+     */
     public LearnBrailleFragment() {
     }
 
+    /**
+     * Gets the arguments passed to it from the calling activity upon fragment creation
+     * @param savedInstanceState Bundle object of any saved instances
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
     }
 
+    /**
+     * Brings the fragment into view by showing the image/card associated with th  page number
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return ViewGroup
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,7 +116,8 @@ public class LearnBrailleFragment extends android.support.v4.app.Fragment {
     }
 
     /**
-     * Returns the page number represented by this fragment object.
+     *Gets the page number represented by this fragment object.
+     * @return Integer representing a page number
      */
     public int getPageNumber() {
         return mPageNumber;

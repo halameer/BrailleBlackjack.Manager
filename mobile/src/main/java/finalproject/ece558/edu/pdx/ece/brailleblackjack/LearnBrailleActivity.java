@@ -1,3 +1,25 @@
+/*  Braille BlackJack - An android program that aims to teach Braille Numbers is a fun way by playing the
+ *   game blackjack
+ *
+ *   Copyright (C) 2015 Hussein AlAmeer, and Tu Truong
+ *
+ *   This file is part of Braille BlackJack.
+ *
+ *   Braille BlackJack is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Braille BlackJack is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.app.Fragment;
@@ -12,6 +34,9 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 /**
+ * This activity class represents the Learn Braille part of the app. It shows images/cards to teach
+ *  braille characters to a user by using a pager and LearnBrailleFragment to house the cards in.
+ *
  * Demonstrates a "screen-slide" animation using a {@link ViewPager}. Because {@link ViewPager}
  * automatically plays such an animation when calling {@link ViewPager#setCurrentItem(int)}, there
  * isn't any animation-specific code in this sample.
@@ -23,9 +48,7 @@ import android.view.MenuItem;
  * @see LearnBrailleFragment
  */
 public class LearnBrailleActivity extends FragmentActivity {
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
+     /* The number of pages (wizard steps) to show in this demo. */
     private static final int NUM_PAGES = 4;
 
     /**
@@ -34,11 +57,13 @@ public class LearnBrailleActivity extends FragmentActivity {
      */
     private ViewPager mPager;
 
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
+    /*  The pager adapter, which provides the pages to the view pager widget. */
     private PagerAdapter mPagerAdapter;
 
+    /**
+     * Start the LearnBraillePagerAdapter
+     * @param savedInstanceState Bundle object of any saved instances
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +83,11 @@ public class LearnBrailleActivity extends FragmentActivity {
         });
     }
 
+    /**
+     * Create the action menu to provide buttons to navigate the Pager
+     * @param menu Menu object
+     * @return Boolean true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -85,6 +115,11 @@ public class LearnBrailleActivity extends FragmentActivity {
         return true;
     }
 
+    /**
+     * Handler of a menu button click
+     * @param item MenuItem object
+     * @return Boolean true
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

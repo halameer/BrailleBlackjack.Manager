@@ -1,3 +1,25 @@
+/*  Braille BlackJack - An android program that aims to teach Braille Numbers is a fun way by playing the
+ *   game blackjack
+ *
+ *   Copyright (C) 2015 Hussein AlAmeer, and Tu Truong
+ *
+ *   This file is part of Braille BlackJack.
+ *
+ *   Braille BlackJack is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Braille BlackJack is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package finalproject.ece558.edu.pdx.ece.brailleblackjack;
 
 import android.content.Context;
@@ -11,6 +33,9 @@ import com.google.android.gms.wearable.WearableListenerService;
 /**
  * This Class sets up a Listener Service to receive messages and handle the messages.
  *  This service is declared in the Android Manifest to be able to listen for messages.
+ *
+ * ToastDroid.com has a tutorial about how to set-up a MessageApi listener service
+ * Source: http://toastdroid.com/2014/08/18/messageapi-simple-conversations-with-android-wear/
  */
 public class ListenerService extends WearableListenerService {
 
@@ -23,7 +48,10 @@ public class ListenerService extends WearableListenerService {
 
     /**
      * Handle messages received from a device through the Google Messaging API
-     *
+     * If the message is simply a start then start the activity
+     * If its a win then the Wear vibrates once for a long time
+     * If its a loss then the Wear vibrates twice for a short time
+     * If its a draw then the Wear vibrates thrice for a very short time
      * @param messageEvent contains message of which event to trigger
      */
     @Override

@@ -46,7 +46,9 @@
         <string name="reveal_total">Reveal Total</string>
 
         <!-- About Page -->
-        <string name="authors">Originally Designed and Created by Hussein AlAmeer and
+        <string name="authors">Originally Designed &amp; Created by\n
+            Hussein AlAmeer\n
+            &amp;\n
             Tu Truong.</string>
         <string name="credit">This app was made using various bits of code examples from Android
             Open Source Project from developer.android.com.\n\nLicensed under the Apache 2.0
@@ -57,7 +59,8 @@
             http://www.androiddesignpatterns.com/2014/12/activity-fragment-transitions-in-android-lollipop-part1.html\n\n
             Thanks to Maciej Ciemięga from StackOverflow.com and Curtis Martin from ToastDroid.com with Messages Api\n
             http://stackoverflow.com/questions/24711232/button-click-in-android-wear\n
-            http://toastdroid.com/2014/08/18/messageapi-simple-conversations-with-android-wear/</string>
+            http://toastdroid.com/2014/08/18/messageapi-simple-conversations-with-android-wear/
+        </string>
 
         <!-- Card descriptions for Talk-Back -->
         <string name="description_1_clubs">Ace of Clubs</string>
